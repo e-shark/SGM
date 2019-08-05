@@ -1,0 +1,21 @@
+
+#---  Sublime ide filese
+*.sublime-workspace
+*.sublime-project
+
+#---  Work documents for project
+/docs/ 
+
+#---  Work directories
+/uploads/ 
+/Log/ 
+/Assets/ 
+
+#---  Work files
+*sg.cnf
+*kkpio.dmp
+
+#--- archives in current folder
+/*.arj
+/*.zip
+/*.rar
