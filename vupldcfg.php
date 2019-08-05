@@ -19,13 +19,13 @@
 <div class="container">
 	<div class="row">
 		<div class="col-md-2"></div>
-		<div class="col-md-6">		<h3>Firmware upload</h3> 		</div>
+		<div class="col-md-6">		<h3>Configuration upload</h3> 		</div>
 	</div>
 
-	<form action="cupload.php" method="post" enctype="multipart/form-data">
+	<form action="cupldcfg.php" method="post" enctype="multipart/form-data">
 		<br>
        	<div class="row">
-			<div class="col-md-2">		Firmware file to upload:		</div>
+			<div class="col-md-2">		Config file to upload:		</div>
 			<div class="col-md-8">		<input type="file" name="fileToUpload" id="fileToUpload" class="btn btn-default btn-file">	</div>
 		</div>
 		<div class="row">
@@ -35,7 +35,7 @@
 		<br>
        	<div class="row">
        		<div class="col-md-2"></div>
-			<div class="col-md-1"><a class="btn btn-primary" href="vmain.php"> Cancel </a></div>
+			<div class="col-md-1"><a     class="btn btn-primary" href="vmain.php">       Cancel     </a></div>
 			<div class="col-md-2">		<input type="submit" value="Upload" name="submit" class="btn btn-primary"></div>
 		</div>
 		<br>

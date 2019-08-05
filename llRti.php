@@ -53,16 +53,21 @@ function getInt($arr,$offset)
    return ($arr[$offset+3]<<24) + ($arr[$offset+2]<<16)+ ($arr[$offset+1]<<8) + $arr[$offset];
 }                                
 
+//--------------------------------------------------------------------------------------
+// dmpInfo - 
+// key - адрес блока вида 1_1_1_s104
+// rtiTableInfo
+//--------------------------------------------------------------------------------------
 function  getRtiTableInfo(&$dmpInfo, $key,&$rtiTableInfo){
 	$protocolTypes = ['s101' => 160,'m101'=> 60,'s104'=>162, 'm104'=> 62, 'mModbus' =>45];
 	$mkaProtocols = [102,3,103,4,104,5,105,6,106,7,107,8,108,9,109,10,110,11,111,12,112,13,113,14,114,15,115,16];
 //	logger("key = $key");
 	$offsets = explode('_',$key);
     $protocolName = $offsets[3];
-    $port = $offsets[2];
-    $devNr = $offsets[1];
-    $devInd = $devNr-1;
-    $blockInd = $offsets[0]-1;
+    $port = $offsets[2];                // номер канала
+    $devNr = $offsets[1];               
+    $devInd = $devNr-1;                 // ID устройства (0..n)
+    $blockInd = $offsets[0]-1;			// ID блока (0..n)
 
     $nport = getShort($dmpInfo, HDR_PORTS_POS);
     $ndev = getShort($dmpInfo,HDR_KPTS_POS);

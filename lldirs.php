@@ -24,6 +24,7 @@ $lrturtdir 	  = '/home/vpr/bin';
 $uploadFwFile = 'lrtum_fw.fwa';
 
 define( 'FWUPDATE_SCRIPT',"$lrturtdir/fwupdate.sh noreboot" );
+define( 'CFGUPDATE_SCRIPT',"$lrturtdir/cfgupdate.sh noreboot" );
 
 if( is_dir( $lrturtdir ) ) {
 	$ListPort =['/dev/ttyUSB0','/dev/ttyUSB1','/dev/ttyUSB2','/dev/ttyUSB3','/dev/ttyS1','/dev/tty/ttyS2'];
@@ -33,9 +34,9 @@ if( is_dir( $lrturtdir ) ) {
 else {	/*---For debugging under Windows*/
 	$ListPort =['com1','com2','com3','com4','com5','com6',];
 	
-	$rtuDumpFileName= $_SERVER[DOCUMENT_ROOT]."/SGM/kkpio.dmp";
-	$rtuLogDir = $_SERVER[DOCUMENT_ROOT].'/SGM/Log';
-	$jamLConfigFile = $_SERVER[DOCUMENT_ROOT]."/SGM/sg.cnf";
+	$rtuDumpFileName= $_SERVER[DOCUMENT_ROOT]."/kkpio.dmp";
+	$rtuLogDir = $_SERVER[DOCUMENT_ROOT].'/Log';
+	$jamLConfigFile = $_SERVER[DOCUMENT_ROOT]."/sg.cnf";
 }
 
 function logger($message)
@@ -74,10 +75,13 @@ function _t($key){
 		'Home'=> ["Домой"],
 		'Configuration'=> ["Конфигурация"],
 		"Change password"=> ["Изменить пароль"],
-		"Upload Firmware"=> ["Загрузить конфигурацию"],
+		"Upload Firmware"=> ["Обновить ПО"],
+		"Upload Config" => ["Загрузить конфигурацию"],
+		"Download Config" => ["Скачать конфигурацию"],
 		'View Log'=> ["Просмотр журнала"],
 		'Reboot'=> ["Перезагрузка"],
 		'Logout'=> ["Выйти из системы"],
+		'Administration' => ["Администрирование"],
 
 		"Protocol" => ["Протокол"],
 		"Protocols" => ["Протоколов"],

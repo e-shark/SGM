@@ -12,8 +12,8 @@
 		{
 			makeRtiView($rtuDumpFileName, $runTimeInfo );
 	    }
-	    else if ( !empty($_POST['signalInfo'])) {
-	    	$key = str_replace('Table_','',$_POST['signalInfo']);
+	    else if ( !empty($_POST['signalInfo'])) {							// signalInfo имеет вид 'Table_1_1_1_s104'
+	    	$key = str_replace('Table_','',$_POST['signalInfo']);				
    			$dmpInfo = file_get_contents( $rtuDumpFileName,FALSE, NULL, 0);	
 			$dmpInfo = array_slice(unpack('C*', "\0".$dmpInfo), 1);
 			getRtiTableInfo($dmpInfo,$key,$runTimeInfo);

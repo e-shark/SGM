@@ -11,7 +11,14 @@
  */
 ?>
 <?php /*Secure page from unauthorised access*/ include 'libauth.php'; session_start(); if( !isAuthorized() ) { header('Location: index.php'); exit(); } ?>
-<?php unset($chpswmessage);	if( !empty( $_SESSION['chpswmessage'] ) ) { $chpswmessage = $_SESSION['chpswmessage']; unset($_SESSION['chpswmessage']); } ?>
+
+<?php 
+unset($chpswmessage);	
+if( !empty( $_SESSION['chpswmessage'] ) ) { $chpswmessage = $_SESSION['chpswmessage']; unset($_SESSION['chpswmessage']); } 
+
+unset($uploadmessage);	
+if( !empty( $_SESSION['uploadmessage'] ) ) { $uploadmessage = $_SESSION['uploadmessage']; unset($_SESSION['uploadmessage']); } 
+?>
 
 <!--  Header -->
 <?php require($DOCUMENT_ROOT . "v_header.php");?> 
@@ -50,5 +57,30 @@
 		</div>
 		<br>
 	</form>
+
+	<div class="row">
+		<div class="col-md-2"></div>
+		<div class="col-md-6">		<h3>Upload Firmware:</h3> 		</div>
+	</div>
+
+	<form action="cupload.php" method="post" enctype="multipart/form-data">
+		<br>
+       	<div class="row">
+			<div class="col-md-2">		Firmware file to upload:		</div>
+			<div class="col-md-8">		<input type="file" name="fileToUpload" id="fileToUpload" class="btn btn-default btn-file">	</div>
+		</div>
+		<div class="row">
+			<div class="col-md-2">		</div>
+			<div class="col-md-4"><label><?php echo $uploadmessage ?></label></div>
+		</div>
+		<br>
+       	<div class="row">
+       		<div class="col-md-2"></div>
+			<div class="col-md-1"><a     class="btn btn-primary" href="vmain.php">       Cancel     </a></div>
+			<div class="col-md-2">		<input type="submit" value="Upload" name="submit" class="btn btn-primary"></div>
+		</div>
+		<br>
+	</form>
+
 </div>
 <?php require($DOCUMENT_ROOT . "v_footer.php");?> 

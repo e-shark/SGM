@@ -9,20 +9,22 @@
 <div class="row">
 	<div class="col-md-3">
 	<ul id='myUL' class ="nav nav-pills nav-stacked">
-  		<li id = "HomeId"  role="presentation" formname='HomePanel'><span class="form_avail"><a href="#" > <?=_t('Home')?> </a></span></li>
+  		 <li id = "HomeId"  role="presentation" formname='HomePanel'><span class="form_avail"><a href="#" > <?=_t('Home')?> </a></span></li>
 
 <?php 
 	$jamLConfig= yaml_parse_file($jamLConfigFile);
-//	logger(print_r($jamLConfig,true));
+	//logger(print_r($jamLConfig,true));
 	$dmpInfo = makeRtiView($rtuDumpFileName, $runTimeInfo );
 	makeConfigTreeItems( $jamLConfig,$dmpInfo, $TreeView,$PanelView);
 	echo $TreeView;
 	$LablelTextOn = "'"._t("On")."'"; $LablelTextOff = "'"._t("Off")."'";
 ?>
-	    <li role="presentation" id="navAdmin"> <a href="vadmin.php" ><?=_t("Change password")?></a></li>
-	    <li role="presentation" id="navUpload"> <a href="vupload.php" ><?=_t("Upload Firmware")?></a></li>
+		<li role="presentation" id="navDnldCfg"> <a href="cdnldcfg.php" ><?=_t("Download Config")?></a></li>
+		<li role="presentation" id="navГзldCfg"> <a href="vupldcfg.php" ><?=_t("Upload Config")?></a></li>
+		<!-- <li role="presentation" id="navUpload"> <a href="vupload.php" ><?=_t("Upload Firmware")?></a></li> -->
 		<li role="presentation" id="navReboot"> <a href="vreboot.php?reboot" ><?=_t("Reboot")?></a></li>
 		<li role="presentation" id="navLog"> <a href="vviewlog.php" ><?=_t("View Log")?></a></li>
+		<li role="presentation" id="navAdmin"> <a href="vadmin.php" ><?=_t("Administration")?></a></li>
 		<li role="presentation" id="navLogout"> <a href="clogin.php?logout" ><?=_t("Logout")?></a></li>
 	</ul>
 	</div>

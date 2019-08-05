@@ -12,8 +12,8 @@
 /Assets/ 
 
 #---  Work files
-*sg.cnf
-*kkpio.dmp
+*.cnf
+*.dmp
 
 #--- archives in current folder
 /*.arj

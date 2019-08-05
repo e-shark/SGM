@@ -37,21 +37,21 @@ if ( !is_uploaded_file( $_FILES['fileToUpload']['tmp_name'] ) ) {
 }
 
 if ( move_uploaded_file( $_FILES['fileToUpload']['tmp_name'], $uploadfile ) ) { 
-	if( FALSE == exec( FWUPDATE_SCRIPT, $output, $retv ) ) { 
-		$_SESSION['uploadmessage'] = 'Error: failed while updating the firmware';	
+	if( FALSE == exec( CFGUPDATE_SCRIPT, $output, $retv ) ) { 
+		$_SESSION['uploadmessage'] = 'Error: failed while updating the configuration';	
 		goto magain; 
 	}
 	if( $retv != 0 ) { 
 		$_SESSION['uploadmessage'] = 'Error: '.$retv.' while updating the firmware';	
 		goto magain; 
 	}
-	$_SESSION['rebootmessage'] = 'Firmware was successfully updated, reboot the device';
+	$_SESSION['rebootmessage'] = 'Configuration was successfully updated, reboot the device';
     header('Location: vreboot.php');
 } 
 else {
 	$_SESSION['uploadmessage'] = 'Error while moving file';
 magain:
-	header('Location: vadmin.php');
+	header('Location: vupload.php');
     exit();
 }
 /*echo 'Info:';print_r($_FILES);*/

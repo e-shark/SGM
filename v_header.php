@@ -61,8 +61,19 @@ li {font-size:16px;}
 <div class="container">
 	<br>
 	<div class="panel panel-primary">
-		<div class="panel-heading"><h1> SG Monitor</h1></div>
-		<div class="panel-body"> Checks SG state and represents a hierarchical view of SG configuration editor. © 2019 Intep Ltd.</div>
+		<div class="panel-heading">
+      <h1 class="text-white bg-dark">  SG Monitor  </h1> 
+    </div>
+		<div class="panel-body"> 
+      <div class="row">
+        <div class="col-md-1">
+          <a  class="badge badge-primary"  href="vmain.php">Home<a/>
+        </div>
+        <div class="col-md-auto">
+          Checks SG state and represents a hierarchical view of SG configuration editor. © 2019 Intep Ltd.
+        </div>
+      </div>
+    </div>
 	</div>
 
 
