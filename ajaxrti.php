@@ -2,6 +2,10 @@
 /********************************************************
  * Platform: php5.6/bootstrap3.3.7/jquery1.11.1
 */
+ini_set('error_reporting', E_ALL);
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+
 	require($DOCUMENT_ROOT . "lldirs.php"); 
 	require($DOCUMENT_ROOT . "llRti.php"); 
 
@@ -21,5 +25,7 @@
 	    else echo json_encode('Error request for getting run-time info');
 
 		echo json_encode($runTimeInfo);
+	}else{
+		echo json_encode('Error request.');		
 	}
 ?>

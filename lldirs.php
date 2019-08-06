@@ -28,15 +28,16 @@ define( 'CFGUPDATE_SCRIPT',"$lrturtdir/cfgupdate.sh noreboot" );
 
 if( is_dir( $lrturtdir ) ) {
 	$ListPort =['/dev/ttyUSB0','/dev/ttyUSB1','/dev/ttyUSB2','/dev/ttyUSB3','/dev/ttyS1','/dev/tty/ttyS2'];
-	$rtuDumpFileName= '/tmp/lrtum.dmp';
+	$rtuDumpFileName= '/run/shm/v2mmmf';//'/tmp/lrtum.dmp';
 	$rtuLogDir = $lrturtdir;
+	$jamLConfigFile = "/home/vpr/bin/sg.cnf";
 }
 else {	/*---For debugging under Windows*/
 	$ListPort =['com1','com2','com3','com4','com5','com6',];
 	
-	$rtuDumpFileName= $_SERVER[DOCUMENT_ROOT]."/kkpio.dmp";
-	$rtuLogDir = $_SERVER[DOCUMENT_ROOT].'/Log';
-	$jamLConfigFile = $_SERVER[DOCUMENT_ROOT]."/sg.cnf";
+	$rtuDumpFileName= $_SERVER['DOCUMENT_ROOT']."/kkpio.dmp";
+	$rtuLogDir = $_SERVER['DOCUMENT_ROOT'].'/Log';
+	$jamLConfigFile = $_SERVER['DOCUMENT_ROOT']."/sg.cnf";
 }
 
 function logger($message)

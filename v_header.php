@@ -67,7 +67,7 @@ li {font-size:16px;}
 		<div class="panel-body"> 
       <div class="row">
         <div class="col-md-1">
-          <a  class="badge badge-primary"  href="vmain.php">Home<a/>
+          <a  class="badge badge-primary"  href="vmain.php">Home</a>
         </div>
         <div class="col-md-auto">
           Checks SG state and represents a hierarchical view of SG configuration editor. © 2019 Intep Ltd.

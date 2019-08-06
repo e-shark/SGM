@@ -29,12 +29,12 @@ const PORTDEF_PROTOCOL_POS = 363;
 
 const KP_NAME_SIZE=50; 
 const KP_TYPE_POS= 54; 
-const KP_PORT_POS= KP_TYPE_POS + 1; 
-const KP_NBOARD_POS= KP_PORT_POS+3; 
+define('KP_PORT_POS', KP_TYPE_POS + 1);  //const KP_PORT_POS= KP_TYPE_POS + 1; 
+define('KP_NBOARD_POS', KP_PORT_POS+3);  //const KP_NBOARD_POS= KP_PORT_POS+3; 
 const KP_DIAG_POS=469; 
 const DUMP_FLAG = 1;
-const JOURNAL_FLAG = 1<<6;
-const DEBUG_FLAG = 1<<7;
+define('JOURNAL_FLAG', 1<<6);  //const JOURNAL_FLAG = 1<<6;
+define('DEBUG_FLAG', 1<<7);  //const DEBUG_FLAG = 1<<7;
 const PORT_ON_FLAG = 1;
 
 function getTextString($arr,$offset, $size)
@@ -97,6 +97,12 @@ function  getRtiTableInfo(&$dmpInfo, $key,&$rtiTableInfo){
 	$bpactime = getInt($dmpInfo,$offsetBPactime);
 	$vals = array();	
 	$shift = 0;
+
+	// debug --------------------------------------
+	// $rtiTableInfo = "bxtype : ".$btype.", ";
+	// $rtiTableInfo.= "ofset : +".$offsetTM."+".$bfrom."*".TM_TABLE_REC_SIZE."+1=".($offsetTM + $bfrom * TM_TABLE_REC_SIZE + 1);
+	// debug --------------------------------------
+
 	switch($btype) {
 		case 1:case 2:
 		$nbyte = $bsnum;
@@ -119,7 +125,7 @@ function  getRtiTableInfo(&$dmpInfo, $key,&$rtiTableInfo){
 		case 0:case 3:
 		$nsignal=$bsnum;
 		for($itm=0; $itm < $bsnum; $itm++) {
-			$vals[] = $dmpInfo[$offsetTM + $bfrom*TM_TABLE_REC_SIZE + 1 + $itm];
+			$vals[] = $dmpInfo[$offsetTM + $bfrom*TM_TABLE_REC_SIZE + 1 + $itm*TM_TABLE_REC_SIZE];
 		}
 	}
 
@@ -138,7 +144,7 @@ function  getRtiTableInfo(&$dmpInfo, $key,&$rtiTableInfo){
 	$bkgStyle = 'background-color: '.($delay>10 ? 'LightSalmon;' : 'Chartreuse');
 	for($itm= 0; $itm < $nsignal; $itm++) {
 		$address= "$prefix:".($itm+1);
-		$rtiTableInfo.="<tr><td style= \"$bkgStyle\">$address</td><td>".$vals[$itm]."</td><td >".(empty($bpactime)? '': date('Y-m-d h:i:s',$bpactime))."</td></tr>";
+		$rtiTableInfo.="<tr><td style= \"$bkgStyle\">$address</td><td>".$vals[$itm]."</td><td >".(empty($bpactime)? '': date('Y-m-d H:i:s',$bpactime))."</td></tr>";
 	}
 	$rtiTableInfo.="</tbody></table>";
 }
@@ -155,7 +161,8 @@ function makeRtiView( $dumpfname, &$runTimeInfo ){
 	$rtiIOinfo = "Disabled";
 	$rtiMbusInfo="Disabled";
 	try {
-		$result = file_get_contents( $dumpfname,FALSE, NULL, 0);	
+		$result = file_get_contents( $dumpfname,FALSE, NULL, 0);
+		if (!$result) return;
 	}
 	catch(Exception $e) {
 		return;

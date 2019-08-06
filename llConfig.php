@@ -1,7 +1,10 @@
 <?php 
 
-$saveButtonTxt = '<br><div class="row"><div class="col-md-4"></div><div class="col-md-2"><input class="btn btn-primary" type="submit" value="       Save       "></div></div><br>';
-//$saveButtonTxt = '';
+//	require($DOCUMENT_ROOT . "llRti.php");	 
+
+$saveButtonTxt = '';
+//$saveButtonTxt = '<br><div class="row"><div class="col-md-4"></div><div class="col-md-2"><input class="btn btn-primary" type="submit" value="       Save       "></div></div><br>';
+$saveButtonTxt = '';
 $InuseOn = _t("On"); $InuseOff = _t("Off"); 			
 /*			
 
@@ -16,6 +19,7 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 
 	function makeConfigBlocks( $Blocks,$key, $dmpInfo, &$TreeView,&$PanelView){
 		global $saveButtonTxt;
+		global $ifDisabled;
 		$tmTypes= [0=>'ТИ',1=>'ТС',2=>'ТУ',3=>'ТИИ', ];
 		$nblock = count($Blocks);
 
@@ -24,25 +28,25 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 			$idName= "BlockPanel_$par";
 			$BlockTreeLabel = _t('Block');
 			$TreeView .= "<li formname='$idName'><span class='form_avail '><a href='#' > $BlockTreeLabel ".$i."</a></span></li>";
-			$BlockInd = $Blocks[$i-1]['block']; $ASDU = $Blocks[$i-1]['ASDU'];
+			$BlockInd = $Blocks[$i-1]['Block']; $ASDU = $Blocks[$i-1]['ASDU'];
 			$nsignals = getRtiTableInfo($dmpInfo,$par,$rtiTableInfo);
 			$form_title = _t("Block Settings");
 			$block_index = _t("Block Index");
 			$table_title = _t("Signal Table");
 			$PanelView .= "<div id='$idName' style='display:none'>
-							<h3>$form_title:</h3>
+					<h3>$form_title:</h3>
 					<div class='row'>
-						<div class='col-md-4'>		$block_index: 			</div>
-						<div class='col-md-2'><div class='panel panel-info'><div class='panel-body'> $BlockInd </div></div></div> 					
+						<div class='col-md-4'> $block_index: </div>
+						<div class='col-md-2'> <div class='panel-info form-control'> $BlockInd  </div> </div> 					
 					</div>
 					<div class='row'>
-						<div class='col-md-4'>		ASDU: 			</div>
-						<div class='col-md-2'>		<input class='form-control' type='text' value ='$ASDU' name='Inuse_$par' > 		</div>
+						<div class='col-md-4'> ASDU: </div>
+						<div class='col-md-2'> <div class=' panel-info form-control'> $ASDU </div> </div>
 					</div>
 					$saveButtonTxt
 					<br><br>
+					<h3>$table_title:</h3>
 					<div id= 'Table_$par' class = 'signal_table'>
-						<h3>$table_title:</h3>
 						$rtiTableInfo
 					</div>
 				</div>
@@ -70,7 +74,7 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 			$idName= "DevPanel_$par";
 			$TreeView .= "<li formname='$idName'><span class='form_avail mycaret'><a href='#' >$DevTreeLabel ".$i."</a></span><ul class='nested'>
 			";
-			makeConfigBlocks($Devs[$i-1]['blocks'], $par, $dmpInfo, $TreeView,$PanelView);
+			makeConfigBlocks($Devs[$i-1]['Blocks'], $par, $dmpInfo, $TreeView,$PanelView);
 			$TreeView .= '
 				</ul></li>';
 			$DevInd = $Devs[$i-1]['LDev']; $Inuse = $Devs[$i-1]['Inuse'];
@@ -79,65 +83,69 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 			$PanelView .= "<div id='$idName' style='display:none'>
 				<h3>$DevLabel:</h3>
 				<div class='row'>
-					<div class='col-md-2'>	<label>	$DevIndLabel: 	</label>		</div>
-					<div class='col-md-2'><div class=' panel-info form-control'> $DevInd </div></div>
+					<div class='col-md-2'> <label> $DevIndLabel: 	</label> </div>
+					<div class='col-md-2'> <div class=' panel-info form-control'> $DevInd </div> </div>
 				</div>
 				<div class='row'>
-					<div class='col-md-2'>	<label>	$NameLabel: 	</label>		</div>
-					<div class='col-md-3'>		<input class='form-control' type='text' value ='$Name' name='Name_$par' > 		</div> 					
+					<div class='col-md-2'> <label>	$NameLabel: 	</label> </div>
+					<div class='col-md-3'> <div class=' panel-info form-control'> $Name </div> </div>		
 				</div>
 				<div class='row'>
-					<div class='col-md-2'>	<label>	$CommentLabel: 	</label>		</div>
-					<div class='col-md-10'>		<input class='form-control' type='text' value ='$Comment' name='Comment_$par' > 		</div> 					
+					<div class='col-md-2'> <label> $CommentLabel: 	</label> </div>
+					<div class='col-md-10'> <div class=' panel-info form-control'> $Comment </div> </div>
 				</div>
 				<div class='row'>
-					<div class='col-md-2'>	<label>	$InuseLabel	</label> </div>
-					<div class='col-md-2'>	<label><input type='checkbox' value ='1' name='Inuse_$par' $checked onchange='toggleCheckBoxLabelText(this)'>$InuseOnOff</label></div>
+					<div class='col-md-2'> <label> $InuseLabel </label> </div>
+					<div class='col-md-2'> <label> <input type='checkbox' disabled value ='1' name='Inuse_$par' $checked onchange='toggleCheckBoxLabelText(this)'>&emsp;$InuseOnOff</label> </div>
 				</div>
 				";
 
 			if(null != ($LAddress =$Devs[$i-1]['LAddress'])){//s104,m104
 				$PanelView .= "<div class='row'>
-					<div class='col-md-2'>	<label>	$LAddressLabel: 	</label>		</div>
-					<div class='col-md-2'>		<input class='form-control' type='text' value ='$LAddress' name='LAddress_$par' > 		</div> 	
+					<div class='col-md-2'> <label>	$LAddressLabel: </label> </div>
+					<div class='col-md-2'> <div class=' panel-info form-control'> $LAddress </div> </div>
 				</div>";
 			}
-			if(null != ($Linkaddress =$Devs[$i-1]['Linkaddress'])){//s101,m101,s104,m104
+			if(null != ($Linkaddress =$Devs[$i-1]['LinkAddress'])){//s101,m101,s104,m104
 				$PanelView .= "<div class='row'>
-					<div class='col-md-2'>	<label>	$LinkaddressLabel: 	</label>		</div>
-					<div class='col-md-2'>		<input class='form-control' type='text' value ='$Linkaddress' name='Linkaddress_$par' > 		</div>
+					<div class='col-md-2'> <label> $LinkaddressLabel: </label> </div>
+					<div class='col-md-2'> <div class=' panel-info form-control'> $Linkaddress </div> </div>
 				</div>
 				";
+				$PanelView .= "<div class='row'>
+					<div class='col-md-2'>	<label>	$LinkaddressLabel: 	</label>		</div>
+					<div class='col-md-2'><div class=' panel-info form-control'> $Linkaddress </div> </div>
+				</div>";
 			}
-			if(null != ($pollperiod =$Devs[$i-1]['pollperiod'])){
+			if(null != ($pollperiod =$Devs[$i-1]['Pollperiod'])){
 				$PanelView .= "<div class='row'>
 					<div class='col-md-2'>	<label>	$pollperiodLabel: 	</label>		</div>
-					<div class='col-md-2'>		<input class='form-control' type='text' value ='$pollperiod' name='pollperiod_$par' > 		</div> 	
+					<div class='col-md-2'> <div class=' panel-info form-control'> $pollperiod </div> </div>
 				</div>";
 			}
 			if(null != ($LinkTimeout =$Devs[$i-1]['LinkTimeout']))
 				$PanelView .= "<div class='row'>
 					<div class='col-md-2'>	<label>	$LinkTimeoutLabel($SecText): 	</label>		</div>
-					<div class='col-md-2'>		<input class='form-control' type='text' value ='$LinkTimeout' name='LinkTimeout_$par' > 		</div> 	
+					<div class='col-md-2'> <div class=' panel-info form-control'> $LinkTimeout </div> </div>
 				</div>";
 			if(null != ($Clocksyncperiod =$Devs[$i-1]['Clocksyncperiod']))
 				$PanelView .= "<div class='row'>
 					<div class='col-md-2'>	<label>	$ClocksyncperiodLabel($SecText): 	</label>		</div>
-					<div class='col-md-2'>		<input class='form-control' type='text' value ='$Clocksyncperiod' name='Clocksyncperiod_$par' > 		</div> 	
+					<div class='col-md-2'>	<div class=' panel-info form-control'> $Clocksyncperiod </div> </div>
 				</div>";
 
 			if(null != ($Command100 =$Devs[$i-1]['Command100'])){
 				$Command100OnOff = $Command100 == 1 ? $InuseOn :  $InuseOff; $checked = $Command100 == 1 ? "checked" : "";
 				$PanelView .= "<div class='row'>
 					<div class='col-md-2'>	<label>	$Command100Label: 	</label>		</div>
-					<div class='col-md-2'>	<label><input type='checkbox' value ='1' name='Command100_$par' $checked onchange='toggleCheckBoxLabelText(this)'>$Command100OnOff</label></div>
+					<div class='col-md-2'>	<label> <input type='checkbox' disabled value ='1' name='Command100_$par' $checked onchange='toggleCheckBoxLabelText(this)'>&emsp;$Command100OnOff</label></div>
 				</div>";
 			}
 			if(null != ($Command101 =$Devs[$i-1]['Command101'])){
 				$Command1001nOff = $Command101 == 1 ? $InuseOn :  $InuseOff; $checked = $Command101 == 1 ? "checked" : "";
 				$PanelView .= "<div class='row'>
 					<div class='col-md-2'>	<label>	$Command101Label: 	</label>		</div>
-					<div class='col-md-2'>	<label><input type='checkbox' value ='1' name='Command101_$par' $checked onchange='toggleCheckBoxLabelText(this)'>$Command101OnOff</label></div>
+					<div class='col-md-2'>	<label><input type='checkbox' disabled value ='1' name='Command101_$par' $checked onchange='toggleCheckBoxLabelText(this)'>&emsp;$Command101OnOff</label></div>
 				</div>
 				";
 			}
@@ -145,71 +153,55 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 			if(null != ($KaType =$Devs[$i-1]['KaType'])){//mka
 				$PanelView .= "<br><div class='row'>
 					<div class='col-md-2'>	<label>	$PotocolText: </label>		</div>
-					<div class='col-md-2'>	<select class='form-control' name='KaType_$par'>";
-				foreach ($ListKaType as $item) {
-					$sel = $KaType == $item ? "selected":'';
-					$PanelView .= "
-						<option value='$item' $sel>$item</option>
-						";
-				}
-				$PanelView .= " </select> </div>
-					";
+					<div class='col-md-2'> <div class=' panel-info form-control'> $KaType </div> </div>"; 
 
 				$KaChannel =$Devs[$i-1]['KaChannel'];	
 				$PanelView .= "
 					<div class='col-md-2'>	<label>	$ChannelText: </label>		</div>
-					<div class='col-md-2'>	<select class='form-control' name='KaChannel_$par'>";
-				foreach ($ListKaChannel as $item) {
-					$sel = $KaChannel == $item ? "selected":'';
-					$PanelView .= "
-						<option value='$item' $sel>$item</option>
-						";
-				}
-				$PanelView .= " </select> </div>
-					 </div>
-					";
+					<div class='col-md-2'>	<div class=' panel-info form-control'> $KaChannel </div> </div>
+				</div>";
 
 				$KaChannelmode = $Devs[$i-1]['KaChannelmode'];
 				$KaChannelmodeOnOff = $KaChannelmode == 1 ? $DuplexText : $HalfDuplexText; $checked = $KaChannelmode == 1 ? "checked" : "";
 				$fEXtraPars = "\"$DuplexText\",\"$HalfDuplexText\"";
 				$PanelView .= "<div class='row'>
 						<div class='col-md-2'>	<label>	$KaChannelmodeLabel:	</label>		</div>
-						<div class='col-md-2'>	<label><input type='checkbox' value ='1' name='KaChannelmode_$par' $checked onchange='toggleCheckBoxLabelText(this,$fEXtraPars)'>$KaChannelmodeOnOff</label>	</div>
+						<div class='col-md-2'>	<label><input type='checkbox' disabled value ='1' name='KaChannelmode_$par' $checked onchange='toggleCheckBoxLabelText(this,$fEXtraPars)'>&emsp;$KaChannelmodeOnOff</label>	</div>
 				";
 				$KaChannelInversion = $Devs[$i-1]['KaChannelInversion'];
 				$KaChannelInversionOnOff = $KaChannelInversion == 1 ? $YesText : $NoText; $checked = $KaChannelInversion == 1 ? "checked" : "";
 				$fEXtraPars = "\"$YesText\",\"$NoText\"";
 				$PanelView .= "
 					<div class='col-md-2'>	<label>	$KaInversionLabel:	</label>		</div>
-					<div class='col-md-2'>	<label><input type='checkbox' value ='1' name='KaChannelInversion_$par' $checked onchange='toggleCheckBoxLabelText(this,$fEXtraPars)'>$KaChannelInversionOnOff</label>	</div>
+					<div class='col-md-2'>	<label><input type='checkbox' disabled value ='1' name='KaChannelInversion_$par' $checked onchange='toggleCheckBoxLabelText(this,$fEXtraPars)'>&emsp;$KaChannelInversionOnOff</label>	</div>
 					</div>
 				";
 
 				$t1 = $Devs[$i-1]['t1'];
 				$PanelView .= "<div class='row'>
-					<div class='col-md-2'>	<label>	t1 ($msek): 	</label>		</div>
-					<div class='col-md-2'>		<input class='form-control' type='text' value ='$t1' name='t1_$par' > 		</div> 	
+					<div class='col-md-2'>	<label>	t1 ($msek): </label> </div>
+					<div class='col-md-2'> <div class=' panel-info form-control'> $t1 </div> </div> 	
 				";
 				$t2 = $Devs[$i-1]['t2'];
 				$PanelView .= "
-					<div class='col-md-2'>	<label>	t2 ($msek): 	</label>		</div>
-					<div class='col-md-2'>		<input class='form-control' type='text' value ='$t2' name='t2_$par' > 		</div> 	
+					<div class='col-md-2'> <label>	t2 ($msek): 	</label>		</div>
+					<div class='col-md-2'> <div class=' panel-info form-control'> $t2 </div> </div> 	
 				</div>";
 
 				$KaChannelSpeed = $Devs[$i-1]['KaChannelSpeed'];
 				$PanelView .= "<div class='row'>
 					<div class='col-md-2'>	<label>	$KaChannelSpeedLabel: 	</label>		</div>
-					<div class='col-md-2'>		<input class='form-control' type='text' value ='$KaChannelSpeed' name='KaChannelSpeed_$par' > 		</div> 	
+					<div class='col-md-2'> <div class=' panel-info form-control'> $KaChannelSpeed </div> </div> 
 					";
 				$Ad1 = $Devs[$i-1]['Ad1'];
 				$PanelView .= "
 					<div class='col-md-2'>	<label>	$Ad1Text: 	</label>		</div>
-					<div class='col-md-2'>		<input class='form-control' type='text' value ='$Ad1' name='Ad1_$par' > 		</div> 	
+					<div class='col-md-2'> <div class=' panel-info form-control'> $Ad1 </div> </div> 	
 					";
 				$Ad2 = $Devs[$i-1]['Ad2'];
 				$PanelView .= "
 					<div class='col-md-2'>	<label>	$Ad2Text: 	</label>		</div>
-					<div class='col-md-2'>		<input class='form-control' type='text' value ='$Ad2' name='Ad2_$par' > 		</div> 	
+					<div class='col-md-2'> <div class=' panel-info form-control'> $Ad2 </div> </div> 	
 				</div>";
 			}
 			$PanelView .= "$saveButtonTxt 
@@ -247,44 +239,44 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 			$PanelView .= "<div id='$idName' style='display:none'>
 							<h3>$lineLabel:</h3>
 					<div class='row'>
-						<div class='col-md-2'>	<label>	$lineIndLabel: 	</label>		</div>
-						<div class='col-md-2'><div class=' panel-info form-control'> $lineInd </div></div>
+						<div class='col-md-2'> <label>	$lineIndLabel: 	</label>		</div>
+						<div class='col-md-2'> <div class=' panel-info form-control'> $lineInd </div></div>
 					</div>
 					<div class='row'>
-						<div class='col-md-2'>	<label>	$NameLabel: 	</label>		</div>
-						<div class='col-md-3'>		<input class='form-control' type='text' value ='$Name' name='Name_$par' > 		</div> 					
+						<div class='col-md-2'> <label>	$NameLabel: 	</label>		</div>
+						<div class='col-md-3'> <div class=' panel-info form-control'> $Name </div> </div>				
 					</div>
 					<div class='row'>
-						<div class='col-md-2'>	<label>	$CommentLabel: 	</label>		</div>
-						<div class='col-md-10'>		<input class='form-control' type='text' value ='$Comment' name='Comment_$par' > 		</div> 					
+						<div class='col-md-2'> <label>	$CommentLabel: 	</label>		</div>
+						<div class='col-md-10'> <div class=' panel-info form-control'> $Comment </div> </div> 
 					</div>
 					<div class='row'>
-						<div class='col-md-2'>	<label>	$InuseLabel:	</label>		</div>
-						<div class='col-md-2'>	<label><input type='checkbox' value ='1' name='Inuse_$par' $checked onchange='toggleCheckBoxLabelText(this)'>$InuseOnOff</label>	</div>
+						<div class='col-md-2'> <label>	$InuseLabel:	</label>		</div>
+						<div class='col-md-2'> <label><input type='checkbox' disabled value ='1' name='Inuse_$par' $checked onchange='toggleCheckBoxLabelText(this)'>&emsp;$InuseOnOff</label>	</div>
 					</div>
 					";
 
 			if(isset($lines[$i-1]['Port'])){
 				$PanelView .= "
 					<div class='row'>
-						<div class='col-md-2'>	<label>	$PortLabel: </label>	</div>
-						<div class='col-md-2'>		<input class='form-control' type='text' value ='".$lines[$i-1]['Port']."' name='Port_$par' > 	</div>
+						<div class='col-md-2'> <label>	$PortLabel: </label>	</div>
+						<div class='col-md-2'> <div class=' panel-info form-control'>".$lines[$i-1]['Port']." </div> </div>
 					 </div>
 				";
 			}
 			if(isset($lines[$i-1]['IpAddress'])){//m104,mka
 				$PanelView .= "
 					<div class='row'>
-						<div class='col-md-2'>	<label>	IP $Address:  </label>	</div>
-						<div class='col-md-2'>		<input class='form-control' type='text' value ='".$lines[$i-1]['IpAddress']."' name='IpAddress_$par' > 	</div>
+						<div class='col-md-2'> <label>	IP $Address:  </label>	</div>
+						<div class='col-md-2'> <div class=' panel-info form-control'>".$lines[$i-1]['IpAddress']."</div> </div>
 					 </div>
 				";
 			}
 			if(isset($lines[$i-1]['consoleport'])){//mka
 				$PanelView .= "
 					<div class='row'>
-						<div class='col-md-2'>	<label>	$ConcoleText $PortLabel:  </label>	</div>
-						<div class='col-md-2'>		<input class='form-control' type='text' value ='".$lines[$i-1]['consoleport']."' name='consoleport_$par' > 	</div>
+						<div class='col-md-2'> <label> $ConcoleText $PortLabel: </label> </div>
+						<div class='col-md-2'>  <div class=' panel-info form-control'> ".$lines[$i-1]['consoleport']." </div> </div>
 					 </div>
 				";
 			}
@@ -292,7 +284,7 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 				$PanelView .= "
 					<div class='row'>
 						<div class='col-md-2'>	<label>	$ConcoleText $OutText:  </label>	</div>
-						<div class='col-md-2'>		<input class='form-control' type='text' value ='".$lines[$i-1]['consoletout']."' name='consoletout_$par' > 	</div>
+						<div class='col-md-2'>	 <div class=' panel-info form-control'> ".$lines[$i-1]['consoletout']." </div> </div>
 					 </div>
 				";
 			}
@@ -302,7 +294,7 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 				$ClockSyncOnOff = $ClockSync == 1 ? $InuseOn :  $InuseOff; $checked = $ClockSync == 1 ? "checked" : "";
 				$PanelView .= "<div class='row'>
 						<div class='col-md-2'>	<label>	$ClockSyncLabel:	</label>		</div>
-						<div class='col-md-2'>	<label><input type='checkbox' value ='1' name='ClockSync_$par' $checked onchange='toggleCheckBoxLabelText(this)'>$ClockSyncOnOff</label>	</div>
+						<div class='col-md-2'>	<label><input type='checkbox' disabled value ='1' name='ClockSync_$par' $checked onchange='toggleCheckBoxLabelText(this)'>&emsp;$ClockSyncOnOff</label>	</div>
 					</div>
 				";
 			}
@@ -310,27 +302,11 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 			if(null != ($comdev =$lines[$i-1]['comdev'])){//s101
 				$PanelView .= "<br><div class='row'>
 					<div class='col-md-1'>	<label>	$PortLabel: </label>		</div>
-					<div class='col-md-3'>	<select class='form-control' name='comdev_$par'>";
-				foreach ($ListPort as $item) {
-					$sel = $comdev == $item ? "selected":'';
-					$PanelView .= "
-						<option value='$item' $sel>$item</option>
-						";
-				}
-				$PanelView .= " </select> </div>
-					";
+					<div class='col-md-2'>	 <div class=' panel-info form-control'> $comdev </div> </div>";
 				if(null != ($Mode =$lines[$i-1]['Mode'])){//s101
 					$PanelView .= "
-						<div class='col-md-1'>	<label>	$ModeText: </label>		</div>
-						<div class='col-md-2'>	<select class='form-control' name='Mode_$par'>";
-					foreach ($ListMode as $item) {
-						$sel = $Mode == $item ? "selected":'';
-						$PanelView .= "
-							<option value='$item' $sel>$item</option>
-							";
-					}
-					$PanelView .= " </select> </div>
-						";
+						<div class='col-md-1'> <label>	$ModeText: </label>		</div>
+						<div class='col-md-2'> <div class=' panel-info form-control'> $Mode </div> </div>";
 				}
 
 				if(null != ($comdevmode =$lines[$i-1]['comdevmode'])){//s101 modbus
@@ -343,33 +319,38 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 				
 				$PanelView .= "<div class='row'>
 					<div class='col-md-1'>	<label>	$ResponseTimeoutText ($SecText): </label>		</div>
-					<div class='col-md-2'>	<input class='form-control' type='text' value ='".$lines[$i-1]['ResponseTimeout']."' name='ResponseTimeout_$par' ></div>";
+					<div class='col-md-2'>	<div class=' panel-info form-control'> ".$lines[$i-1]['ResponseTimeout']." </div></div>";
 				if(null != ($LinkTestTimeout =$lines[$i-1]['LinkTestTimeout'])) //s101	
 					$PanelView .= "
 					<div class='col-md-2'>	<label>	$LinkTestText $ResponseTimeoutText ($SecText): </label>		</div>
-					<div class='col-md-1'>	<input class='form-control' type='text' value ='".$LinkTestTimeout."' name='LinkTestTimeout_$par' ></div>";
+					<div class='col-md-1'>	<div class=' panel-info form-control'> ".$LinkTestTimeout." </div></div>";
 				if(null != ($Retries =$lines[$i-1]['Retries'])) //s101	
 					$PanelView .= "
 						<div class='col-md-1'>	<label>	$RetriesText: </label>		</div>
-					<div class='col-md-2'>	<input class='form-control' type='text' value ='".$Retries."' name='Retries_$par' ></div>";
+					<div class='col-md-2'>	<div class=' panel-info form-control'> ".$Retries." </div></div>";
 				$PanelView .= "</div>
 					";
 			}
 
 			if(isset($lines[$i-1]['t1'])){
 				$PanelView .= "	<br><div class='row'> 
-						<div class='col-md-1'> <label> t1,($SecText.):</label> </div>
-						<div class='col-md-2'>	<input class='form-control' type='text' value ='".$lines[$i-1]['t1']."' id='t1_$par' name='t1_$par'>	</div>		
-						<div class='col-md-1'>	<label> t2,($SecText.):</label></div>
-						<div class='col-md-2'>	<input class='form-control' type='text' value ='".$lines[$i-1]['t2']."' name='t2$par'>	</div>		
-						<div class='col-md-1'>	<label> t3,($SecText.):</label></div>
-						<div class='col-md-2'>	<input class='form-control' type='text' value ='".$lines[$i-1]['t3']."' name='t3_$par'>	</div>		
+						<div class='col-md-1'> <label> t1,($SecText.): </label> </div>
+						<div class='col-md-2'> <div class=' panel-info form-control'> ".$lines[$i-1]['t1']." </div> </div>
+
+						<div class='col-md-1'> <label> t2,($SecText.): </label> </div>
+						<div class='col-md-2'> <div class=' panel-info form-control'> ".$lines[$i-1]['t2']." </div> </div>
+
+						<div class='col-md-1'> <label> t3,($SecText.): </label> </div>
+						<div class='col-md-2'> <div class=' panel-info form-control'> ".$lines[$i-1]['t3']." </div> </div>
+	
 					</div>
 					<div class='row'>
-						<div class='col-md-1'>	<label>	k :	</label>		</div>
-						<div class='col-md-2'>		<input class='form-control' type='text' value ='".$lines[$i-1]['k']."' name='k_$par' > 		</div> 					
-						<div class='col-md-1'>	<label>	w : </label>		</div>
-						<div class='col-md-2'>		<input class='form-control' type='text' value ='".$lines[$i-1]['w']."' name='w_$par' > 		</div> 					
+						<div class='col-md-1'> <label>	k :	</label> </div>
+						<div class='col-md-2'> <div class=' panel-info form-control'> ".$lines[$i-1]['k']." </div> </div>
+				
+						<div class='col-md-1'> <label>	w : </label> </div>
+						<div class='col-md-2'> <div class=' panel-info form-control'> ".$lines[$i-1]['w']." </div> </div>
+				
 					</div>
 					";
 			}
@@ -378,21 +359,13 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 				$PanelView .= "
 					<div class='row'>
 						<div class='col-md-1'>	<label>	IOAL: </label>		</div>
-						<div class='col-md-2'><div class=' panel-info form-control'>". $IOAL." </div></div>
+						<div class='col-md-2'> <div class=' panel-info form-control'>". $IOAL." </div></div>
 					";
 
 				if(null != ($ASDUAL =$lines[$i-1]['ASDUAL'])) {		 					
 					$PanelView .= "
-						<div class='col-md-1'>	<label>	ASDUAL: </label>		</div>
-						<div class='col-md-2'>	<select class='form-control' name='ASDUAL_$par'>";
-					foreach ($ListASDUAL as $item) {
-						$sel = $ASDUAL == $item ? "selected":'';
-						$PanelView .= "
-							<option value='$item' $sel>$item</option>
-							";
-					}
-					$PanelView .= " </select> </div>
-						";
+						<div class='col-md-1'> <label> ASDUAL: </label> </div>
+						<div class='col-md-2'> <div class=' panel-info form-control'> ".$ASDUAL." </div> </div>";
 				}	
 				if(!isset($lines[$i-1]['LAL'])) $PanelView .= " </div>
 					";
@@ -401,28 +374,12 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 			if(null != ($LAL =$lines[$i-1]['LAL'])) {//s101
 				$PanelView .= "
 					<div class='col-md-1'>	<label>	LAL: </label>		</div>
-					<div class='col-md-2'>	<select class='form-control' name='LAL_$par'>";
-				foreach ($ListLAL as $item) {
-					$sel = $LAL == $item ? "selected":'';
-					$PanelView .= "
-						<option value='$item' $sel>$item</option>
-						";
-				}
-				$PanelView .= " </select> </div>
-					";
+					<div class='col-md-2'> <div class=' panel-info form-control'> ".$LAL." </div> </div>";
 				$COTL =$lines[$i-1]['COTL'];	
 				$PanelView .= "
 					<div class='col-md-1'>	<label>	COTL: </label>		</div>
-					<div class='col-md-2'>	<select class='form-control' name='COTL_$par'>";
-				foreach ($ListCOTL as $item) {
-					$sel = $COTL == $item ? "selected":'';
-					$PanelView .= "
-						<option value='$item' $sel>$item</option>
-						";
-				}
-				$PanelView .= " </select> </div>
-					";
-				$PanelView .= " </div>
+					<div class='col-md-2'> <div class=' panel-info form-control'> ".$COTL." </div> </div>";
+				$PanelView .= " </div> 
 					";
 			}
 

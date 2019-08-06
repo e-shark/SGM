@@ -1,5 +1,11 @@
 <?php /*Secure page from unauthorised access*/ include 'libauth.php'; session_start(); if( !isAuthorized() ) { header('Location: index.php'); exit(); } ?>	
 <?php 
+
+ini_set('error_reporting', E_ALL);
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+
+	//phpinfo();
 	require($DOCUMENT_ROOT . "v_header.php");
 	require($DOCUMENT_ROOT . "lldirs.php"); 
 	require($DOCUMENT_ROOT . "llConfig.php"); 
@@ -15,12 +21,14 @@
 	$jamLConfig= yaml_parse_file($jamLConfigFile);
 	//logger(print_r($jamLConfig,true));
 	$dmpInfo = makeRtiView($rtuDumpFileName, $runTimeInfo );
+	//echo "<br>--------------<br>".print_r($jamLConfig,true)."<br>-------------------------<br>";
 	makeConfigTreeItems( $jamLConfig,$dmpInfo, $TreeView,$PanelView);
+
 	echo $TreeView;
 	$LablelTextOn = "'"._t("On")."'"; $LablelTextOff = "'"._t("Off")."'";
 ?>
 		<li role="presentation" id="navDnldCfg"> <a href="cdnldcfg.php" ><?=_t("Download Config")?></a></li>
-		<li role="presentation" id="navГзldCfg"> <a href="vupldcfg.php" ><?=_t("Upload Config")?></a></li>
+		<li role="presentation" id="navUpldCfg"> <a href="vupldcfg.php" ><?=_t("Upload Config")?></a></li>
 		<!-- <li role="presentation" id="navUpload"> <a href="vupload.php" ><?=_t("Upload Firmware")?></a></li> -->
 		<li role="presentation" id="navReboot"> <a href="vreboot.php?reboot" ><?=_t("Reboot")?></a></li>
 		<li role="presentation" id="navLog"> <a href="vviewlog.php" ><?=_t("View Log")?></a></li>
@@ -91,14 +99,14 @@ for (i = 0; i < toggler.length; i++) {
 	        success:function (data) {
               cur_signal_table.innerHTML=data;
 	        },
-	        error:function() {
-              cur_signal_table.innerHTML='AJAX error!';
+	        error:function(data) {
+              cur_signal_table.innerHTML='AJAX error!'+data;
     	    }
 	    });
 	    return false;
 	}
     
-	window.onload = function() {setInterval( getRti, 60000 ); setInterval( getSignal, 50000 ); } 
+	window.onload = function() {setInterval( getRti, 6000 ); setInterval( getSignal, 5000 ); } //50000
 
     function toggleCheckBoxLabelText(el,onText = <?=$LablelTextOn?>,offText = <?=$LablelTextOff?>) {
         var checked = el.checked;
