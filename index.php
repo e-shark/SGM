@@ -6,7 +6,7 @@
 <?php include 'libauth.php'; session_start(); if( authorizeFromCookie() ) {	header('Location: vmain.php'); exit(); } ?>
 <?php unset($badusrmessage);	if( !empty( $_SESSION['badusrmessage'] ) ) { $badusrmessage = $_SESSION['badusrmessage']; unset($_SESSION['badusrmessage']); } ?>
 
-<?php require($DOCUMENT_ROOT . "v_header.php");?> 
+<?php require($_SERVER['DOCUMENT_ROOT'] . "/v_header.php");?> 
 
 	<form action="clogin.php" method="post">
 		<br>
@@ -28,4 +28,4 @@
 		</div>
 		<br><div class="row"><div class="col-md-2"></div><div class="col-md-2"><input class="btn btn-primary" type="submit" value="       Enter       "></div></div><br>
 	</form>
-<?php require($DOCUMENT_ROOT . "v_footer.php");?> 
+<?php require($_SERVER['DOCUMENT_ROOT'] . "/v_footer.php");?> 

@@ -13,7 +13,7 @@
 ?>
 <?php /*Secure page from unauthorised access*/ include 'libauth.php'; session_start(); if( !isAuthorized() ) { header('Location: index.php'); exit(); } ?>
 <?php
-require($DOCUMENT_ROOT . "lldirs.php"); 
+require($_SERVER['DOCUMENT_ROOT'] . "/lldirs.php"); 
 
 //print_r($_REQUEST);
 //---Get the list of available log files
@@ -60,7 +60,7 @@ if( !empty( $loglist ) ) {
 else unset( $logfilename );
 //---Generating the html-page...
 ?>
-<?php require($DOCUMENT_ROOT . "v_header.php");?> 
+<?php require($_SERVER['DOCUMENT_ROOT'] . "/v_header.php");?> 
 <div class="container">
 	<div class="row">
 		<div class="col-md-2"><br><a     class="btn btn-primary" href="vmain.php">       Home     </a></div>
@@ -87,4 +87,4 @@ else unset( $logfilename );
 		</pre>
 	</div>
 </div>
-<?php require($DOCUMENT_ROOT . "v_footer.php");?> 
+<?php require($_SERVER['DOCUMENT_ROOT'] . "/v_footer.php");?> 

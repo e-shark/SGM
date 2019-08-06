@@ -21,19 +21,22 @@ if( !empty( $_SESSION['uploadmessage'] ) ) { $uploadmessage = $_SESSION['uploadm
 ?>
 
 <!--  Header -->
-<?php require($DOCUMENT_ROOT . "v_header.php");?> 
+<?php require($_SERVER['DOCUMENT_ROOT']. "/v_header.php");?> 
 <!--  /Header -->
 <div class="container">
 	<div class="row">
 		<div class="col-md-2"></div>
 		<div class="col-md-6">		<h1> RTU configuration </h1>		</div>
 	</div>
+
+	<hr align="center" color="Red" />
+	<?php // СМЕНА ПАРОЛЯ ?>
+
 	<div class="row">
 		<div class="col-md-2"></div>
 		<div class="col-md-6">		<h3>Admin password settings:</h3> 		</div>
 	</div>
-	
-	
+
 	<form action="cadmin.php" method="post">
 		<br>
 		<div class="row">
@@ -57,6 +60,9 @@ if( !empty( $_SESSION['uploadmessage'] ) ) { $uploadmessage = $_SESSION['uploadm
 		</div>
 		<br>
 	</form>
+
+	<hr align="center" color="Red" />
+	<?php // ОБНОВЛЕНИЕ ПРОШИВКИ ?>
 
 	<div class="row">
 		<div class="col-md-2"></div>
@@ -83,4 +89,4 @@ if( !empty( $_SESSION['uploadmessage'] ) ) { $uploadmessage = $_SESSION['uploadm
 	</form>
 
 </div>
-<?php require($DOCUMENT_ROOT . "v_footer.php");?> 
+<?php require($_SERVER['DOCUMENT_ROOT'] . "/v_footer.php");?> 

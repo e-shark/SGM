@@ -2,11 +2,13 @@
 <?php unset($rebootmessage);	
 if( !empty( $_SESSION['rebootmessage'] ) ) { $rebootmessage = $_SESSION['rebootmessage']; unset($_SESSION['rebootmessage']); } 
 	if( (!isset($rebootmessage)) && (!isset($_GET['reboot'] ))){ header('Location: vmain.php'); exit(); } ?>
-<?php require($DOCUMENT_ROOT . "v_header.php");?> 
+<?php require($_SERVER['DOCUMENT_ROOT'] . "/v_header.php");?> 
 <?php
 unset( $rebootBtn );
 if( isset($_GET['reboot'] ) ) {
-	system('sudo reboot', $retvalue );
+	system('sudo reboot', $retvalue);
+	//exec('sudo reboot', $xxx, $retvalue );
+	//print_r($xxx);
 	if( 0 != $retvalue )	$rebootmessage = 'Failed to reboot device';
 	else 			$rebootmessage = 'Device is rebooting...';
 }
@@ -24,4 +26,4 @@ print <<<HERE
 	</div>
 HERE;
 ?>
-<?php require($DOCUMENT_ROOT . "v_footer.php");?> 
+<?php require($_SERVER['DOCUMENT_ROOT'] . "/v_footer.php");?> 

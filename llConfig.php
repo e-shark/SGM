@@ -1,6 +1,6 @@
 <?php 
 
-//	require($DOCUMENT_ROOT . "llRti.php");	 
+//	require($_SERVER['DOCUMENT_ROOT'] . "/llRti.php");	 
 
 $saveButtonTxt = '';
 //$saveButtonTxt = '<br><div class="row"><div class="col-md-4"></div><div class="col-md-2"><input class="btn btn-primary" type="submit" value="       Save       "></div></div><br>';

@@ -2,7 +2,7 @@
 
 /*Secure page from unauthorised access*/ include 'libauth.php'; session_start(); if( !isAuthorized() ) { header('Location: index.php'); exit(); } 
 
-  require($DOCUMENT_ROOT . "lldirs.php"); 
+  require($_SERVER['DOCUMENT_ROOT'] . "/lldirs.php"); 
 
 function file_force_download($file) {
   if (file_exists($file)) {

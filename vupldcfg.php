@@ -14,7 +14,7 @@
 <?php unset($uploadmessage);	if( !empty( $_SESSION['uploadmessage'] ) ) { $uploadmessage = $_SESSION['uploadmessage']; unset($_SESSION['uploadmessage']); } ?>
 
 <!--  Header -->
-<?php require($DOCUMENT_ROOT . "v_header.php");?> 
+<?php require($_SERVER['DOCUMENT_ROOT'] . "/v_header.php");?> 
 <!--  /Header -->
 <div class="container">
 	<div class="row">
@@ -41,4 +41,4 @@
 		<br>
 	</form>
 </div>
-<?php require($DOCUMENT_ROOT . "v_footer.php");?> 
+<?php require($_SERVER['DOCUMENT_ROOT'] . "/v_footer.php");?> 

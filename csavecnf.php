@@ -17,7 +17,7 @@
 <?php 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST'){header('Location: vmain.php');exit();}
 
-require($DOCUMENT_ROOT . "lldirs.php"); 
+require($_SERVER['DOCUMENT_ROOT'] . "/lldirs.php"); 
 /*
  *
  */

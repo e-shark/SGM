@@ -6,8 +6,8 @@ ini_set('error_reporting', E_ALL);
 ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
 
-	require($DOCUMENT_ROOT . "lldirs.php"); 
-	require($DOCUMENT_ROOT . "llRti.php"); 
+	require($_SERVER['DOCUMENT_ROOT'] . "/lldirs.php"); 
+	require($_SERVER['DOCUMENT_ROOT'] . "/llRti.php"); 
 
 	if( isset( $_POST['rtiInfo'])  || isset( $_POST['signalInfo']) ) 
 	{

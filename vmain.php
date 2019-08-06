@@ -6,10 +6,10 @@ ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
 
 	//phpinfo();
-	require($DOCUMENT_ROOT . "v_header.php");
-	require($DOCUMENT_ROOT . "lldirs.php"); 
-	require($DOCUMENT_ROOT . "llConfig.php"); 
-	require($DOCUMENT_ROOT . "llRti.php");	 
+	require($_SERVER['DOCUMENT_ROOT'] . "/v_header.php");
+	require($_SERVER['DOCUMENT_ROOT'] . "/lldirs.php"); 
+	require($_SERVER['DOCUMENT_ROOT'] . "/llConfig.php"); 
+	require($_SERVER['DOCUMENT_ROOT'] . "/llRti.php");	 
 ?>
 
 <div class="row">
@@ -126,4 +126,4 @@ for (i = 0; i < toggler.length; i++) {
 </script>
 
 
-<?php require($DOCUMENT_ROOT . "v_footer.php");?> 
+<?php require($_SERVER['DOCUMENT_ROOT'] . "/v_footer.php");?> 
