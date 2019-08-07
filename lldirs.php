@@ -21,10 +21,12 @@ $ListKaType =["MKT2PU","MKT2KP","MKT3PU","MKT3KP","UTK1PU","UTK1KP","UTM7PU","UT
 $ListKaChannel =[1,2,3,4];
 
 $lrturtdir 	  = '/home/vpr/bin';
+$uploadCfgile = 'sg.cnf';
 $uploadFwFile = 'lrtum_fw.fwa';
 
 define( 'FWUPDATE_SCRIPT',"$lrturtdir/fwupdate.sh noreboot" );
-define( 'CFGUPDATE_SCRIPT',"$lrturtdir/cfgupdate.sh noreboot" );
+//define( 'CFGUPDATE_SCRIPT',"$lrturtdir/cfgupdate.sh noreboot" );
+define( 'CFGUPDATE_SCRIPT',$_SERVER['DOCUMENT_ROOT']."/shellcommands/makecnf.sh" );
 
 if( is_dir( $lrturtdir ) ) {
 	$ListPort =['/dev/ttyUSB0','/dev/ttyUSB1','/dev/ttyUSB2','/dev/ttyUSB3','/dev/ttyS1','/dev/tty/ttyS2'];

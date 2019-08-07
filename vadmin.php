@@ -18,6 +18,10 @@ if( !empty( $_SESSION['chpswmessage'] ) ) { $chpswmessage = $_SESSION['chpswmess
 
 unset($uploadmessage);	
 if( !empty( $_SESSION['uploadmessage'] ) ) { $uploadmessage = $_SESSION['uploadmessage']; unset($_SESSION['uploadmessage']); } 
+
+$rtuIpAddr    	= '"'.exec('shellcommands'.DIRECTORY_SEPARATOR.'readip.pl -a').'"';
+$rtuGateway    	= '"'.exec('shellcommands'.DIRECTORY_SEPARATOR.'readip.pl -g').'"';
+$rtuNetMask    	= '"'.exec('shellcommands'.DIRECTORY_SEPARATOR.'readip.pl -m').'"';
 ?>
 
 <!--  Header -->
@@ -26,7 +30,7 @@ if( !empty( $_SESSION['uploadmessage'] ) ) { $uploadmessage = $_SESSION['uploadm
 <div class="container">
 	<div class="row">
 		<div class="col-md-2"></div>
-		<div class="col-md-6">		<h1> RTU configuration </h1>		</div>
+		<div class="col-md-6">		<h1> Device configuration </h1>		</div>
 	</div>
 
 	<hr align="center" color="Red" />
@@ -81,12 +85,52 @@ if( !empty( $_SESSION['uploadmessage'] ) ) { $uploadmessage = $_SESSION['uploadm
 		</div>
 		<br>
        	<div class="row">
-       		<div class="col-md-2"></div>
+       		<div class="col-md-2"> </div>
 			<div class="col-md-1"><a     class="btn btn-primary" href="vmain.php">       Cancel     </a></div>
 			<div class="col-md-2">		<input type="submit" value="Upload" name="submit" class="btn btn-primary"></div>
 		</div>
 		<br>
 	</form>
+
+	<hr align="center" color="Red" />
+	<?php // СМЕНА IP АДРЕСА ?>
+
+	<div class="row">
+		<div class="col-md-2"></div>
+		<div class="col-md-6">		<h3>Change IP addres:</h3> 		</div>
+	</div>
+
+	<form action="cchngip.php" method="post" enctype="multipart/form-data">
+		<br>
+
+			<div class="row">
+				<div class="col-md-2">		RTU IP address: 			</div>
+				<div class="col-md-4">		<input class="form-control" type="text" value = <?php echo $rtuIpAddr; ?> name="rtuIpAddr" > 		</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-2">		Default gateway: 			</div>
+				<div class="col-md-4">		<input class="form-control" type="text" value = <?php echo $rtuGateway; ?> name="rtuGateway" > 		</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-2">		Network mask: 			</div>
+				<div class="col-md-4">		<input class="form-control" type="text" value = <?php echo $rtuNetMask; ?> name="rtuNetMask" > 		</div>
+			</div>
+
+			<br>
+			<div class="row">
+				<div class="col-md-2">	</div>
+				<div class="col-md-1">		<a class="btn btn-primary" href="vmain.php">       Cancel     </a></div>
+				<div class="col-md-2">		<input type="submit" value="Change" name="submit" class="btn btn-primary"></div>
+			</div>
+
+		<br>
+	</form>
+
+	<br>
+
+
 
 </div>
 <?php require($_SERVER['DOCUMENT_ROOT'] . "/v_footer.php");?> 

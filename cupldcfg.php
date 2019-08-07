@@ -18,8 +18,8 @@ require($_SERVER['DOCUMENT_ROOT'] . "/lldirs.php");
 
 $uploaddirw = 'uploads/';	
 
-if( is_dir( $lrturtdir ) ) $uploadfile = $lrturtdir.DIRECTORY_SEPARATOR.$uploadFwFile;
-else{ 					   $uploadfile = $uploaddirw.date("Ymd-His_").$uploadFwFile; if( !is_dir( $uploaddirw ) ) mkdir( $uploaddirw ); } // For debugging under Windows
+if( is_dir( $lrturtdir ) ) $uploadfile = $lrturtdir.DIRECTORY_SEPARATOR.$uploadCfgile;
+else{ 					   $uploadfile = $uploaddirw.date("Ymd-His_").$uploadCfgile; if( !is_dir( $uploaddirw ) ) mkdir( $uploaddirw ); } // For debugging under Windows
  						
 
 unset($_SESSION['uploadmessage']);
@@ -37,12 +37,9 @@ if ( !is_uploaded_file( $_FILES['fileToUpload']['tmp_name'] ) ) {
 }
 
 if ( move_uploaded_file( $_FILES['fileToUpload']['tmp_name'], $uploadfile ) ) { 
-	if( FALSE == exec( CFGUPDATE_SCRIPT, $output, $retv ) ) { 
-		$_SESSION['uploadmessage'] = 'Error: failed while updating the configuration';	
-		goto magain; 
-	}
+	passthru ( CFGUPDATE_SCRIPT, $retv ); 
 	if( $retv != 0 ) { 
-		$_SESSION['uploadmessage'] = 'Error: '.$retv.' while updating the firmware';	
+		$_SESSION['uploadmessage'] = 'Error: '.$retv.' while updating the configuration ('.(CFGUPDATE_SCRIPT).')';	
 		goto magain; 
 	}
 	$_SESSION['rebootmessage'] = 'Configuration was successfully updated, reboot the device';
@@ -50,8 +47,10 @@ if ( move_uploaded_file( $_FILES['fileToUpload']['tmp_name'], $uploadfile ) ) {
 } 
 else {
 	$_SESSION['uploadmessage'] = 'Error while moving file';
+	$_SESSION['uploadmessage'] .=  ":".$_FILES['fileToUpload']['tmp_name']." to ".$uploadfile;
+
 magain:
-	header('Location: vupload.php');
+	header('Location: vupldcfg.php');
     exit();
 }
 /*echo 'Info:';print_r($_FILES);*/
