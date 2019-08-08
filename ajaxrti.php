@@ -20,6 +20,7 @@ ini_set('display_startup_errors', 0);
 	    	$key = str_replace('Table_','',$_POST['signalInfo']);				
    			$dmpInfo = file_get_contents( $rtuDumpFileName,FALSE, NULL, 0);	
 			$dmpInfo = array_slice(unpack('C*', "\0".$dmpInfo), 1);
+			//logger(print_r($dmpInfo,true));   			
 			getRtiTableInfo($dmpInfo,$key,$runTimeInfo);
 	    }
 	    else echo json_encode('Error request for getting run-time info');

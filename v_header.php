@@ -69,8 +69,11 @@ li {font-size:16px;}
         <div class="col-md-1">
           <a  class="badge badge-primary"  href="vmain.php">Home</a>
         </div>
-        <div class="col-md-auto">
+        <div class="col-md-8">
           Checks SG state and represents a hierarchical view of SG configuration editor. © 2019 Intep Ltd.
+        </div>
+        <div class="col-md-3">
+          ( <?php exec("cat /home/vpr/bin/sg.ver", $out, $retv );  echo $out[0]; unset($retv); unset($out);?> )
         </div>
       </div>
     </div>
