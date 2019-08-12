@@ -81,7 +81,7 @@ function updateConfig(&$jamLConfig)
 
 updateConfig($jamLConfig);
 yaml_emit_file($jamLConfigFile, $jamLConfig);
-logger("jamLConfig\n".print_r($jamLConfig,true));
+//logger("jamLConfig\n".print_r($jamLConfig,true));
 unset( $jamLConfig );
 
 //---Go to reboot page...

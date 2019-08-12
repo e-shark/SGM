@@ -62,7 +62,13 @@ li {font-size:16px;}
 	<br>
 	<div class="panel panel-primary">
 		<div class="panel-heading">
-      <h1 class="text-white bg-dark">  SG Monitor  </h1> 
+      <div class="row">
+        <div class="col-md-3"> 
+          <h1 class="text-white bg-dark">  SG Monitor  </h1> 
+        </div>
+        <div class="col-md-8"> </div>
+        <div class="col-md-1"><span id="SrvTime"> </span></div>
+      </div>
     </div>
 		<div class="panel-body"> 
       <div class="row">
@@ -79,5 +85,51 @@ li {font-size:16px;}
     </div>
 	</div>
 
+<script>
+  var TimeDiff = 0;
+  var HaveDiff = false;
 
+  function getTime()
+  {
+    $.ajax({
+        url:'ajaxutils.php',
+        type:'POST',
+        data:{'reqfunc':'GtTime'},
+        dataType:'json',
+        success:function (data) {
+          TimeDiff = +Date.now() - data; 
+          HaveDiff = true;
+        },
+        error:function(data) {
+            $("#SrvTime").html("?:?:?");
+        }
+    });
+    return false;
+  }
+
+  function checkTime(i) {
+      if (i < 10) {i = "0" + i};
+      return i;
+  }
+
+  function printTime()
+  {
+  if (!HaveDiff) getTime();
+  var realtime = +Date.now() + TimeDiff; 
+  var date = new Date(realtime);
+  var hours = checkTime(date.getHours());
+  var minutes = checkTime(date.getMinutes());
+  var seconds = checkTime(date.getSeconds());
+  var year = date.getFullYear();
+  var month = date.getMonth();
+  var day = date.getDate();
+  var formattedTime = hours + ':' + minutes + ':' + seconds;      
+  var formattedDate = day + '.' + month + '.' + year;     
+  $("#SrvTime").html("<div class='row'>" + formattedTime + "</div><div class='row'>"+ formattedDate + "</div>");
+  }
+
+
+  setInterval( printTime, 1000 ); 
+
+</script>
 

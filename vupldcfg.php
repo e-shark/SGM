@@ -26,7 +26,7 @@
 		<br>
        	<div class="row">
 			<div class="col-md-2">		Config file to upload:		</div>
-			<div class="col-md-8">		<input type="file" name="fileToUpload" id="fileToUpload" class="btn btn-default btn-file">	</div>
+			<div class="col-md-8">		<input type="file" name="fileToUpload" id="fileToUpload" class="btn btn-default btn-file"  accept=".cnf">	</div>
 		</div>
 		<div class="row">
 			<div class="col-md-2">		</div>

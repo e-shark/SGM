@@ -62,6 +62,7 @@ function getInt($arr,$offset)
 function  getRtiTableInfo(&$dmpInfo, $key,&$rtiTableInfo){
 	$protocolTypes = ['s101' => 160,'m101'=> 60,'s104'=>162, 'm104'=> 62, 'mModbus' =>45];
 	$mkaProtocols = [102,3,103,4,104,5,105,6,106,7,107,8,108,9,109,10,110,11,111,12,112,13,113,14,114,15,115,16];
+	$signaltypes = [0=>'AI', 1=>'DO', 2=>'DI', 3=>'AC'];
 //	logger("key = $key");
 	$offsets = explode('_',$key);
     $protocolName = $offsets[3];
@@ -112,6 +113,10 @@ function  getRtiTableInfo(&$dmpInfo, $key,&$rtiTableInfo){
 	// $rtiTableInfo.= "ofset : +".$offsetTM."+".$bfrom."*".TM_TABLE_REC_SIZE."+1=".($offsetTM + $bfrom * TM_TABLE_REC_SIZE + 1);
 	// debug --------------------------------------
 
+	$hexs =[];
+	$hex= '';
+	$vtypes =[];
+	$vtype = '';
 	switch($btype) {
 		case 1: case 2:
 			$nbyte = $bsnum;							// кол-во сигналов на плате
@@ -138,42 +143,83 @@ function  getRtiTableInfo(&$dmpInfo, $key,&$rtiTableInfo){
 				$ofst = $offsetTM + $bfrom*TM_TABLE_REC_SIZE + $itm*TM_TABLE_REC_SIZE;   // указатель начала записи сигнала TM_Table_Rec
 				$binarydata = pack("c*", $dmpInfo[$ofst+1], $dmpInfo[$ofst+2], $dmpInfo[$ofst+3], $dmpInfo[$ofst+4]);
 				switch($dmpInfo[$ofst]){
-					case 1: $data = unpack("s",$binarydata); break; //SHORT 16 бит целое со знаком
-					case 2: $data = unpack("S",$binarydata); break; //WORD 16 бит целое без знака
-					case 3: $data = unpack("f",$binarydata); break; //float
+				case 1: 	 										//SHORT 16 бит целое со знаком
+					$vtype = 'SHORT';
+					$data = unpack("s",$binarydata)[1]; 
+					$hex = sprintf("%04x",$data) ; 
+					break;
+				case 2: 											//WORD 16 бит целое без знака
+					$vtype = 'WORD';
+					$data = unpack("S",$binarydata)[1]; 
+					$hex = sprintf("%04x",$data) ;
+					break; 
+				case 3: 											//float
+					$vtype = 'FLOAT';
+					$data = unpack("f",$binarydata)[1]; 
+					$hex = sprintf("%02x%02x%02x%02x",$dmpInfo[$ofst+4], $dmpInfo[$ofst+3], $dmpInfo[$ofst+2], $dmpInfo[$ofst+1]) ;
+					break; 
+				case 4: 
+					$vtype = 'INT';
+					$data = unpack("I",$binarydata)[1]; 			//INT 32 бит целое со знаком
+					$hex = sprintf("%08x",$data) ;
+					break; 
+				case 5: 											//DWORD 32 бит целое без знака
+					$vtype = 'DWORD';
+					$data = unpack("L",$binarydata)[1]; 
+					$hex = sprintf("%08x",$data) ;
+					break; 
+				case 6: 											//TIME 32 бит время Ч:М:С:ДС
+					$vtype = 'TIME';
+					$data = $dmpInfo[$ofst+1].":".$dmpInfo[$ofst+2].":".$dmpInfo[$ofst+3]; 
+					$hex = sprintf("%02x%02x%02x",$dmpInfo[$ofst+3], $dmpInfo[$ofst+2], $dmpInfo[$ofst+1]) ;
+					break; 
 
-					case 4: $data = unpack("I",$binarydata); break; //INT 32 бит целое со знаком
-					case 5: $data = unpack("L",$binarydata); break; //DWORD 32 бит целое без знака
-					case 6: $data = $dmpInfo[$ofst+1].":".$dmpInfo[$ofst+2].":".$dmpInfo[$ofst+3]; break; //TIME 32 бит время Ч:М:С:ДС
-
-					case 100: $data = unpack("c",$binarydata); break; //CHAR signed
-					default:
-					case 0: $data = unpack("C",$binarydata); //BYTE unsigned
+				case 100: 											//CHAR signed
+					$vtype = 'CAHR';
+					$data = unpack("c",$binarydata)[1]; 
+					$hex = sprintf("%02x",$data) ;
+					break; 
+				case 0: 											//BYTE unsigned
+				default:
+					$vtype = 'BYTE';
+					$data = unpack("C",$binarydata)[1]; 
+					$hex = sprintf("%02x",$data) ;
 				}
 				
-				$vals[] = $data[1];
+				$vals[] = $data;
+				$hexs[] = $hex;
+				$vtypes[] = $vtype;
 			}
 			unset($ofst);
 			unset($binarydata);
 			unset($data);
+			unset($hex);
+			unset($vtype);
 	}
 
-	$rtiTableInfo ="<table class='table  table-striped'>
+	$table_title = _t("Signal Table");
+	$signal_type_title = _t($signaltypes[$btype]);
+	$rtiTableInfo ="<h3>$table_title ($signal_type_title):</h3>";
+	$rtiTableInfo .="<table class='table  table-striped'>
 		<thead >
 	  		<tr>
 			    <th >Address</th>
-			    <th >Value</th>
-			    <th >Timestamp</th>
+			    <th >Value</th>";
+	if ((0 == $btype) || (3 == $btype)) $rtiTableInfo .="<th >Hex</th>";
+	$rtiTableInfo .="<th >Timestamp</th>
 		  	</tr>
 		</thead>
 		<tbody>";
 
-	$prefix = "$protocolName:$port:".($devNr).":".($blockInd+1);
+	//$prefix = "$protocolName:$port:".($devNr).":".($blockInd+1);
+	$prefix = "$protocolName:".($devNr).":".($blockInd+1);
 	$delay= mktime() - $bpactime;
 	$bkgStyle = 'background-color: '.($delay>10 ? 'LightSalmon;' : 'Chartreuse');
 	for($itm= 0; $itm < $nsignal; $itm++) {
 		$address= "$prefix:".($itm+1);
-		$rtiTableInfo.="<tr><td style= \"$bkgStyle\">$address</td><td>".$vals[$itm]."</td><td >".(empty($bpactime)? '': date('Y-m-d H:i:s',$bpactime))."</td></tr>";
+		$rtiTableInfo .= "<tr><td style= \"$bkgStyle\">$address</td><td>".$vals[$itm]."</td>";
+		if ((0 == $btype) || (3 == $btype)) $rtiTableInfo .= "<td> (".$vtypes[$itm].") 0x".$hexs[$itm]."</td>";
+		$rtiTableInfo .= "<td >".(empty($bpactime)? '': date('Y-m-d H:i:s',$bpactime))."</td></tr>";
 	}
 	$rtiTableInfo.="</tbody></table>";
 }
@@ -202,19 +248,22 @@ function makeRtiView( $dumpfname, &$runTimeInfo ){
 //    $num= getShort($sa,2);
 //    $name= getTextString($sa,2+2,50);
 //    $flags= getShort($sa,56);
-    $ports= getShort($sa, HDR_PORTS_POS);					//кол-во портов 
-    $KPtSize= getShort($sa,HDR_KPTS_POS);					//кол-во КП (девайсов) 
-    $TMtSize= getInt($sa,HDR_TMS_POS);						//кол-во записей телемеханики 
-    $offsetTKP = TCHHEADER_SIZE+ $ports*TPORTDEF_SIZE;		// где начинается таблица девайсов
-    $offsetTPort = TCHHEADER_SIZE;							// где начинается таблица портов
-    $curPortNr = $sa[$offsetTKP+KP_PORT_POS];				// индекс порта связи с КП
-	$runTimeInfo = '';
-	for($i=0; $i < $KPtSize; $i++) {
-		$name= getTextString($sa,$offsetTKP,KP_NAME_SIZE);
-		$portOn = $sa[$offsetTPort+PORTDEF_FLAG_POS]&PORT_ON_FLAG;	// проверяет включен ли порт по флагу PORT_ON
+    $ports= getShort($sa, HDR_PORTS_POS);							//кол-во портов 
+    $KPtSize= getShort($sa,HDR_KPTS_POS);							//кол-во КП (девайсов) 
+    $TMtSize= getInt($sa,HDR_TMS_POS);								//кол-во записей телемеханики 
+    $offsetTKP = TCHHEADER_SIZE+ $ports*TPORTDEF_SIZE;				// где начинается таблица девайсов
+    $offsetTPort = TCHHEADER_SIZE;									// где начинается таблица портов (линий)
+    $curPortNr = $sa[$offsetTKP+KP_PORT_POS];						// индекс порта связи с КП (индекс линии)
+	$runTimeInfo = "<div class='row'><div class='col-md-4'><h4>"._t("Device").":</h4></div><div class='col-md-4'><h4>"._t("Device Status").":</h4></div></div>";
+	for($i=0; $i < $KPtSize; $i++) {								// перебираем все девайсы, что описаны в v2m (в дампе)
+		$name = getTextString($sa,$offsetTKP,KP_NAME_SIZE);
+		if (0 == $sa[$offsetTKP]) $name='&ltnoname&gt';
+		//$portOn = $sa[$offsetTPort+PORTDEF_FLAG_POS]&PORT_ON_FLAG;	// проверяет включен ли порт по флагу PORT_ON (в таблице портов)
 //		logger("offsetTPort = $offsetTPort flag$i =".$sa[$offsetTPort+PORTDEF_FLAG_POS]." Port=".$sa[$offsetTKP+KP_PORT_POS]);
+		$portOn = $_SESSION['DevsParams'][$i]['Inuse'];
     	if($portOn)	{
-			$diag = $sa[$offsetTKP+KP_DIAG_POS];
+			$diag = $sa[$offsetTKP+KP_DIAG_POS];					// читаем байт диагностики из таблицы девайсов
+			//logger(">".$i." - [".($offsetTKP+KP_DIAG_POS)."]= ".$sa[$offsetTKP+KP_DIAG_POS]."<");
 			if( $diag == 1) 	$rtiStatus = GREENLITEICON." Running";
 			else $rtiStatus = REDLITEICON.' Stopped'; 
     	}
@@ -222,12 +271,12 @@ function makeRtiView( $dumpfname, &$runTimeInfo ){
 			$rtiStatus = GRAYLITEICON.' Port off'; 
 		$runTimeInfo .= "<div class='row'>
 		<div class='col-md-4'> 
-			<h4>Device $name Status</h4>
+			<h4> $name </h4>
 		</div>
-		<div id='rtiStatus' class='col-md-5'><div class='panel panel-info'><div class='panel-body'> 
-			$rtiStatus     
-		</div></div></div>
-	</div>
+		<div id='rtiStatus' class='col-md-4'><div class='panel panel-info'><div class='panel-body'> 
+				$rtiStatus     
+			</div></div></div>
+		</div>
 	";
 		$offsetTKP+=KP_TABLE_REC_SIZE;
 		if($sa[$offsetTKP+KP_PORT_POS] != $curPortNr){

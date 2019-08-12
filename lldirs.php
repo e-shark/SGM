@@ -44,9 +44,9 @@ else {	/*---For debugging under Windows*/
 
 function logger($message)
 { 
-list($usec, $sec) = explode(" ", microtime());
-$msec = sprintf("%03d",intval($usec*1000));
-$dbgfn = __DIR__."\\Log\\".date('ymd_').basename(__FILE__,".php").".dbg";
+  list($usec, $sec) = explode(" ", microtime());
+  $msec = sprintf("%03d",intval($usec*1000));
+  $dbgfn = __DIR__."\\Log\\".date('ymd_').basename(__FILE__,".php").".dbg";
   if( FALSE === ( $dbgfp = fopen( $dbgfn, "a" ) ) ) return FALSE;
   fputs($dbgfp, date('H:i:s',$sec).".".$msec.' '.$message."\n");
   fclose($dbgfp);
@@ -56,6 +56,10 @@ $dbgfn = __DIR__."\\Log\\".date('ymd_').basename(__FILE__,".php").".dbg";
 function _t($key){
 	global $settings;
 	$message_table =[
+		"AI"=>["ТИ"],
+		"DO"=>["ТУ"],
+		"DI"=>["ТС"],
+		"AC"=>["ТИИ"],
 		"Yes"=> ["Да"],
 		"No"=> ["Нет"],
 		"On"=> ["Вкл"],
@@ -85,6 +89,7 @@ function _t($key){
 		'Reboot'=> ["Перезагрузка"],
 		'Logout'=> ["Выйти из системы"],
 		'Administration' => ["Администрирование"],
+		'Monitor'=> ["Монитор"],
 
 		"Protocol" => ["Протокол"],
 		"Protocols" => ["Протоколов"],
@@ -124,7 +129,11 @@ function _t($key){
 	];
 	
 	if($settings['language']=='en') return $key;
-	else if ($settings['language']=='ru') return $message_table[$key][0];
+	else {
+		if ($settings['language']=='ru') $res = $message_table[$key][0];
+		if (empty($res)) $res = $key;
+		return $res;
+	}
 }
 
 ?>

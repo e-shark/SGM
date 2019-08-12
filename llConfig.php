@@ -17,6 +17,7 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 */
 //	<input type='hidden' name='par' value='$key_$i'>							
 
+
 	function makeConfigBlocks( $Blocks,$key, $dmpInfo, &$TreeView,&$PanelView){
 		global $saveButtonTxt;
 		global $ifDisabled;
@@ -32,7 +33,6 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 			$nsignals = getRtiTableInfo($dmpInfo,$par,$rtiTableInfo);
 			$form_title = _t("Block Settings");
 			$block_index = _t("Block Index");
-			$table_title = _t("Signal Table");
 			$PanelView .= "<div id='$idName' style='display:none'>
 					<h3>$form_title:</h3>
 					<div class='row'>
@@ -45,7 +45,6 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 					</div>
 					$saveButtonTxt
 					<br><br>
-					<h3>$table_title:</h3>
 					<div id= 'Table_$par' class = 'signal_table'>
 						$rtiTableInfo
 					</div>
@@ -401,6 +400,9 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 		}
 	}
 
+	//---------------------------------------------------------------------------------------------------
+	//
+	//---------------------------------------------------------------------------------------------------
 	function makeConfigTreeItems( $jamLConfig, &$dmpInfo, &$TreeView,&$PanelView){
 		$keys=array_keys($jamLConfig);
 		$cnt = count($keys);
@@ -466,4 +468,27 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 
 		return count($keys);
 	}
+
+	//---------------------------------------------------------------------------------------------------
+	//
+	//---------------------------------------------------------------------------------------------------
+    function fillSesDevsFlagsMas($jamLConfig)
+    {
+    	if (isset($_SESSION['DevsParams'])) unset($_SESSION['DevsParams']);
+
+    	$DevIndex = 0;
+		foreach($jamLConfig as $prot){
+			foreach($prot['Lines'] as $line) {
+				$LineInuse = $line['Inuse'] ;
+ 				foreach($line['LDevs'] as $Device) {
+ 					if ( 0 == $LineInuse ) $DeviceInuse = 0;	// если линия отключена, считаем, что и девайс отключен
+ 					else $DeviceInuse = $Device['Inuse'];
+ 					$_SESSION['DevsParams'] [ $DevIndex ]  = [ 'Name'=>$Device['Name'] , 'Inuse'=>$DeviceInuse ];
+ 					$DevIndex++;
+ 				}
+
+			}
+		}     	
+    }
+
 ?>

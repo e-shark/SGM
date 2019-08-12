@@ -2,6 +2,8 @@
 /********************************************************
  * Platform: php5.6/bootstrap3.3.7/jquery1.11.1
 */
+session_start();
+
 ini_set('error_reporting', E_ALL);
 ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);

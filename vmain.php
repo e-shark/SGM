@@ -22,12 +22,14 @@ ini_set('display_startup_errors', 0);
 	$jamLConfig= yaml_parse_file($jamLConfigFile);
 	//logger(print_r($jamLConfig,true));
 	$dmpInfo = makeRtiView($rtuDumpFileName, $runTimeInfo );
-	//echo "<br>--------------<br>".print_r($jamLConfig,true)."<br>-------------------------<br>";
-	makeConfigTreeItems( $jamLConfig,$dmpInfo, $TreeView,$PanelView);
+	fillSesDevsFlagsMas( $jamLConfig );
+	//echo "<br>--------------<br>".print_r( $_SESSION['DevsParams'] ,true)."<br>-------------------------<br>";
+	makeConfigTreeItems( $jamLConfig, $dmpInfo, $TreeView, $PanelView);
 
 	echo $TreeView;
 	$LablelTextOn = "'"._t("On")."'"; $LablelTextOff = "'"._t("Off")."'";
 ?>
+		<li role="presentation" id="navDnldCfg"> <a href="monitor.php" ><?=_t("Monitor")?></a></li>
 		<li role="presentation" id="navDnldCfg"> <a href="cdnldcfg.php" ><?=_t("Download Config")?></a></li>
 		<li role="presentation" id="navUpldCfg"> <a href="vupldcfg.php" ><?=_t("Upload Config")?></a></li>
 		<!-- <li role="presentation" id="navUpload"> <a href="vupload.php" ><?=_t("Upload Firmware")?></a></li> -->
@@ -107,7 +109,7 @@ for (i = 0; i < toggler.length; i++) {
 	    return false;
 	}
     
-	window.onload = function() {setInterval( getRti, 6000 ); setInterval( getSignal, 5000 ); } //50000
+	window.onload = function() {setInterval( getRti, 6000 ); setInterval( getSignal, 5000 ); return true;}
 
     function toggleCheckBoxLabelText(el,onText = <?=$LablelTextOn?>,offText = <?=$LablelTextOff?>) {
         var checked = el.checked;
