@@ -121,9 +121,9 @@ li {font-size:16px;}
   var minutes = checkTime(date.getMinutes());
   var seconds = checkTime(date.getSeconds());
   var year = date.getFullYear();
-  var month = date.getMonth();
+  var month = checkTime(date.getMonth());
   var day = date.getDate();
-  var formattedTime = hours + ':' + minutes + ':' + seconds;      
+  var formattedTime = "&nbsp;" + hours + ':' + minutes + ':' + seconds;      
   var formattedDate = day + '.' + month + '.' + year;     
   $("#SrvTime").html("<div class='row'>" + formattedTime + "</div><div class='row'>"+ formattedDate + "</div>");
   }

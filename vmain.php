@@ -33,7 +33,7 @@ ini_set('display_startup_errors', 0);
 		<li role="presentation" id="navDnldCfg"> <a href="cdnldcfg.php" ><?=_t("Download Config")?></a></li>
 		<li role="presentation" id="navUpldCfg"> <a href="vupldcfg.php" ><?=_t("Upload Config")?></a></li>
 		<!-- <li role="presentation" id="navUpload"> <a href="vupload.php" ><?=_t("Upload Firmware")?></a></li> -->
-		<li role="presentation" id="navReboot"> <a href="vreboot.php?reboot" ><?=_t("Reboot")?></a></li>
+		<li role="presentation" id="navReboot"> <a href="vreboot.php"  ><?=_t("Reboot")?></a></li>
 		<li role="presentation" id="navLog"> <a href="vviewlog.php" ><?=_t("View Log")?></a></li>
 		<li role="presentation" id="navAdmin"> <a href="vadmin.php" ><?=_t("Administration")?></a></li>
 		<li role="presentation" id="navLogout"> <a href="clogin.php?logout" ><?=_t("Logout")?></a></li>
@@ -53,7 +53,8 @@ ini_set('display_startup_errors', 0);
 
 var toggler = document.getElementsByClassName("form_avail");
 var cur_panel = document.getElementById("HomeId");
-var cur_signal_table = null;//document.getElementById("HomeId");
+var cur_signal_table = null;
+var cur_connect_table = null;
 
 var i;
 for (i = 0; i < toggler.length; i++) {
@@ -71,7 +72,8 @@ for (i = 0; i < toggler.length; i++) {
 	if(cur_panel != par) cur_panel = par;
 	if(form != null) cur_signal_table = form.querySelector(".signal_table");
 //		if(cur_panel != par && nest.className.indexOf('active') + 1) cur_panel = par; else cur_panel = null;
-     if(nest !=null) this.classList.toggle("mycaret-down");
+	if(form != null) cur_connect_table = form.querySelector(".Connection_table");
+    if(nest !=null) this.classList.toggle("mycaret-down");
   });
 }
 
@@ -79,7 +81,7 @@ for (i = 0; i < toggler.length; i++) {
 	    $.ajax({
 	        url:'ajaxrti.php',
 	        type:'POST',
-	        data:{'rtiInfo':'1'},
+	        data:{'reqfunc':'RTI'},
 	        dataType:'json',
 	        success:function (data) {
               $("#HomePanel").html(data);
@@ -97,7 +99,7 @@ for (i = 0; i < toggler.length; i++) {
 	    $.ajax({
 	        url:'ajaxrti.php',
 	        type:'POST',
-	        data:{'signalInfo':cur_signal_table.id},
+	        data:{'reqfunc':'Singnals', 'signalInfo':cur_signal_table.id},
 	        dataType:'json',
 	        success:function (data) {
               cur_signal_table.innerHTML=data;
@@ -108,8 +110,31 @@ for (i = 0; i < toggler.length; i++) {
 	    });
 	    return false;
 	}
-    
-	window.onload = function() {setInterval( getRti, 6000 ); setInterval( getSignal, 5000 ); return true;}
+
+	function getConnections() {
+		if(cur_connect_table == null) return;
+	    
+		$.ajax({
+			url:'ajaxrti.php',
+			type:'POST',
+			data:{'PortInfo':cur_connect_table.getAttribute('port'), 'reqfunc':'Connections'},
+			dataType:'json',
+			success:function (data) {
+				cur_connect_table.innerHTML=data;
+			},
+			error:function(data) {
+				cur_connect_table.innerHTML='AJAX error!'+data;
+			}
+		});
+		return false;
+	}   
+
+	window.onload = function() {
+		setInterval( getRti, 6000 ); 
+		setInterval( getSignal, 3000 ); 
+		setInterval( getConnections, 5000 ); 
+		return true;	// true, чтобы onload распространялся и дальше
+	}
 
     function toggleCheckBoxLabelText(el,onText = <?=$LablelTextOn?>,offText = <?=$LablelTextOff?>) {
         var checked = el.checked;
@@ -126,6 +151,22 @@ for (i = 0; i < toggler.length; i++) {
         label.innerHTML = labelHTML;
         return true;
     }
+
+	function doReboot(){
+		$.ajax({
+			url:'ajaxutils.php',
+			type:'POST',
+			data:{'reqfunc':'Reboot'},
+			dataType:'json',
+			success:function (data) {
+				alert( data );
+			},
+			error:function() {
+				alert( "Не удалось перезагрузить устройство!" );
+			}
+		});
+	}
+
 </script>
 
 

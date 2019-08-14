@@ -30,9 +30,10 @@ define( 'CFGUPDATE_SCRIPT',$_SERVER['DOCUMENT_ROOT']."/shellcommands/makecnf.sh"
 
 if( is_dir( $lrturtdir ) ) {
 	$ListPort =['/dev/ttyUSB0','/dev/ttyUSB1','/dev/ttyUSB2','/dev/ttyUSB3','/dev/ttyS1','/dev/tty/ttyS2'];
-	$rtuDumpFileName= '/run/shm/v2mmmf';//'/tmp/lrtum.dmp';
+	$rtuDumpFileName = '/run/shm/v2mmmf';//'/tmp/lrtum.dmp';
 	$rtuLogDir = $lrturtdir;
 	$jamLConfigFile = "/home/vpr/bin/sg.cnf";
+	$mmfDumpFileName = '/run/shm/S104_STATISTIC_MMF_';
 }
 else {	/*---For debugging under Windows*/
 	$ListPort =['com1','com2','com3','com4','com5','com6',];
@@ -40,6 +41,7 @@ else {	/*---For debugging under Windows*/
 	$rtuDumpFileName= $_SERVER['DOCUMENT_ROOT']."/kkpio.dmp";
 	$rtuLogDir = $_SERVER['DOCUMENT_ROOT'].'/Log';
 	$jamLConfigFile = $_SERVER['DOCUMENT_ROOT']."/sg.cnf";
+	$mmfDumpFileName = $_SERVER['DOCUMENT_ROOT']."/S104_STATISTIC_MMF_";
 }
 
 function logger($message)
@@ -78,6 +80,11 @@ function _t($key){
 		"Duplex"=> ["Дуплекс"],
 		"Half Duplex"=> ["Полудуплекс"],
 		"Inversion"=> ["Инверсия"],
+		"DataType"=> ["Тип данных"],
+		"Еstablish"=> ["Установлено"],
+		"Аctivity"=> ["Активность"],
+		"frame in"=> ["приняно"],
+		"frame out"=> ["передано"],
 
 		'Home'=> ["Домой"],
 		'Configuration'=> ["Конфигурация"],
@@ -101,6 +108,7 @@ function _t($key){
 		"Channel Mode"=> ["Режим канала"],
 
 		"Master IP"=> ["Мастер IP"],
+		"Connection table"=> ["Таблица подключений"],
 		"Clock Sync"=> ["Синхронизация часов"],
 		"Link Aaddress"=> ["Синхронизация часов"],
 		"Com Mode"=> ["Режим порта"],

@@ -2,7 +2,6 @@
 
 //	require($_SERVER['DOCUMENT_ROOT'] . "/llRti.php");	 
 
-$saveButtonTxt = '';
 //$saveButtonTxt = '<br><div class="row"><div class="col-md-4"></div><div class="col-md-2"><input class="btn btn-primary" type="submit" value="       Save       "></div></div><br>';
 $saveButtonTxt = '';
 $InuseOn = _t("On"); $InuseOff = _t("Off"); 			
@@ -23,13 +22,15 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 		global $ifDisabled;
 		$tmTypes= [0=>'ТИ',1=>'ТС',2=>'ТУ',3=>'ТИИ', ];
 		$nblock = count($Blocks);
+		$offsets = explode('_',$key);
+		$protocolName = $offsets[2];
 
 		for($i = 1; $i <= $nblock; $i++) {
 			$par=$i."_".$key;
 			$idName= "BlockPanel_$par";
 			$BlockTreeLabel = _t('Block');
 			$TreeView .= "<li formname='$idName'><span class='form_avail '><a href='#' > $BlockTreeLabel ".$i."</a></span></li>";
-			$BlockInd = $Blocks[$i-1]['Block']; $ASDU = $Blocks[$i-1]['ASDU'];
+			$BlockInd = $Blocks[$i-1]['Block']; 
 			$nsignals = getRtiTableInfo($dmpInfo,$par,$rtiTableInfo);
 			$form_title = _t("Block Settings");
 			$block_index = _t("Block Index");
@@ -38,18 +39,28 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 					<div class='row'>
 						<div class='col-md-4'> $block_index: </div>
 						<div class='col-md-2'> <div class='panel-info form-control'> $BlockInd  </div> </div> 					
-					</div>
-					<div class='row'>
-						<div class='col-md-4'> ASDU: </div>
-						<div class='col-md-2'> <div class=' panel-info form-control'> $ASDU </div> </div>
-					</div>
-					$saveButtonTxt
-					<br><br>
+					</div>";
+			if (('s104' == $protocolName) || ('m104' == $protocolName) ||
+				('s101' == $protocolName) || ('m101' == $protocolName) ) {
+						$ASDU = $Blocks[$i-1]['ASDU'];
+						$PanelView .= "<div class='row'>
+							<div class='col-md-4'> ASDU: </div>
+							<div class='col-md-2'> <div class=' panel-info form-control'> $ASDU </div> </div>
+						</div>";
+			}
+			if ('mModbus' == $protocolName) {
+						$DataType = $Blocks[$i-1]['datatype'];
+						$PanelView .= "<div class='row'>
+							<div class='col-md-4'> "._t("DataType").": </div>
+							<div class='col-md-2'> <div class=' panel-info form-control'> $DataType </div> </div>
+						</div>";
+			}
+			$PanelView .= $saveButtonTxt;
+			$PanelView .= "<br><br>
 					<div id= 'Table_$par' class = 'signal_table'>
 						$rtiTableInfo
 					</div>
-				</div>
-			";
+				</div>";
 		}
 	}
 
@@ -217,6 +228,7 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 		$lineIndLabel = _t("Channel Index"); $InuseLabel = _t("Channel Status"); 
 		$PortLabel = _t("Port"); $NameLabel = _t("Name"); $CommentLabel = _t("Comment");
 		$MasterIpLabel = _t("Master IP");
+		$ConnectionTableLabel =  _t("Connection table");
 		$Address = _t("Address");	$SecText = _t("sec");
 		$ClockSyncLabel = _t("Clock Sync");
 		$ConcoleText = _t("Console"); $OutText = _t("Out");
@@ -382,20 +394,36 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 					";
 			}
 
-			$MasterConnections = $lines[$i-1]['MasterConnections']; 
-			if(isset($MasterConnections)){//s104
-				$PanelView .= "<br><div>
-					<table class='table  table-striped'>
-					<thead > <tr> <th >$MasterIpLabel</th> <th >$Address</th> </tr> </thead>
-					<tbody>";
-				foreach($MasterConnections as $conn)	
-					$PanelView .= "<tr><td>".$conn['Ip']."</td><td>".$conn['LAddress']."</td></tr>";
-				$PanelView .= "
-					</tbody> </table> </div>
-					";
-			}
+			if ("s104" == $key){
+				$MasterConnections = $lines[$i-1]['MasterConnections']; 
+				if(isset($MasterConnections)){								//s104
+					$PanelView .= "<br><div>
+						<table class='table  table-striped'>
+						<thead > <tr> <th >$MasterIpLabel</th> <th >$Address</th> </tr> </thead>
+						<tbody>";
+					foreach($MasterConnections as $conn)	
+						$PanelView .= "<tr><td>".$conn['Ip']."</td><td>".$conn['LAddress']."</td></tr>";
+					$PanelView .= "
+						</tbody> </table> </div>
+						";
+				}
+
+				// Таблица текущих подключений (для 104)
+				//logger("block - ".$key." - ".$protocolName." - ".print_r($offsets,true));
+				//logger("block - ".$key);
+
+				$Port = $lines[$i-1]['Port']; 
+				if(isset($Port)){								//s104
+					$PanelView .= "<br>
+						<h3>$ConnectionTableLabel :</h3>
+						<div port= '$Port' class = 'Connection_table'>
+						</div>";
+				}
+
+			} //if ("s104" == $key)
+
 			$PanelView .= " $saveButtonTxt 
-				</div>
+				</div> <br><br>
 				";
 		}
 	}

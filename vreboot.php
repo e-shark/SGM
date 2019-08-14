@@ -1,29 +1,71 @@
-<?php /*Secure page from unauthorised access*/ include 'libauth.php'; session_start(); if( !isAuthorized() ) { header('Location: index.php'); exit(); } ?>
-<?php unset($rebootmessage);	
-if( !empty( $_SESSION['rebootmessage'] ) ) { $rebootmessage = $_SESSION['rebootmessage']; unset($_SESSION['rebootmessage']); } 
-	if( (!isset($rebootmessage)) && (!isset($_GET['reboot'] ))){ header('Location: vmain.php'); exit(); } ?>
+<?php /*Secure page from unauthorised access*/ 
+	include 'libauth.php'; session_start(); if( !isAuthorized() ) { header('Location: index.php'); exit(); } 
+?>
+
 <?php require($_SERVER['DOCUMENT_ROOT'] . "/v_header.php");?> 
+
 <?php
-unset( $rebootBtn );
-if( isset($_GET['reboot'] ) ) {
-	system('sudo reboot', $retvalue);
-	//exec('sudo reboot', $xxx, $retvalue );
-	//print_r($xxx);
-	if( 0 != $retvalue )	$rebootmessage = 'Failed to reboot device';
-	else 			$rebootmessage = 'Device is rebooting...';
-}
-else 
-	$rebootBtn = '<a     class="btn btn-primary" href="vreboot.php?reboot">     Reboot the device    </a><br><br><a     class="btn btn-default" href="index.php">     Reboot later     </a>';
+
+//<h1 class="text-center"> SG Monitor </h1>
 
 print <<<HERE
-	<h1 class="text-center"> SG Monitor </h1>
 	<div class="panel panel-warning">
 		<div class="panel-heading text-center">
-			<h3>$rebootmessage</h3>
-			<br><br>
-			$rebootBtn
+			<h3 id="RbtMessage">Reboot device ?</h3>
+			<br><br><a id="RbtBtn" class="btn btn-primary" href="javascript: doReboot();"> Reboot the device </a>
+			<br><br><a class="btn btn-default" href="index.php"> Home </a>			
 		</div>
 	</div>
 HERE;
 ?>
+<SCRIPT>
+	function ping(){
+		var res=false;
+		$.ajax({
+			url:'ajaxutils.php',
+			type:'POST',
+			data:{'reqfunc':'ping'},
+			dataType:'json',
+			success:function (data) {
+				if( true == data)
+					document.location.href = "index.php";
+			}
+		});
+		return res;
+	}
+
+/*
+	function CheckConnect(){
+		var pr = ping();
+		console.log(pr);
+		if (pr) {
+			document.location.href = "index.php";
+		}else{
+		 setTimeout( CheckConnect, 3000 );
+		}
+	}
+*/
+
+	function doReboot(){
+		$.ajax({
+			url:'ajaxutils.php',
+			type:'POST',
+			data:{'reqfunc':'Reboot'},
+			dataType:'json',
+			success:function (data) {
+				$("#RbtMessage").html(data['message']);
+				if (true == data['result']){
+					//setTimeout( ping, 5000 ); 
+					setInterval( ping, 3000 ); 
+					$( '#RbtBtn' ).hide();
+				}
+				//alert( data );
+			},
+			error:function() {
+				alert( "Не удалось перезагрузить устройство!" );
+			}
+		});
+	}
+</SCRIPT>
+
 <?php require($_SERVER['DOCUMENT_ROOT'] . "/v_footer.php");?> 

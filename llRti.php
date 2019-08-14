@@ -286,4 +286,50 @@ function makeRtiView( $dumpfname, &$runTimeInfo ){
     }
     return $sa;
 }
+
+//--------------------------------------------------------------------------------
+//	Распальцовка mmf файла статистики 104 протокола
+const CN_NUMCON_POS = 0;			// где лежит кол-во подключений
+const CN_SRVPORT_POS = 4;			// где лежит номер порта
+
+const CN_STAT_MAS_SIZE = 10;		// размер таблиц статистики (максимальное кол-во подключений)
+
+define('CN_CSTIME_TABLE_POS', 16);
+define('CN_LSOPTIME_TABLE_POS', CN_CSTIME_TABLE_POS + CN_STAT_MAS_SIZE * 4);
+define('CN_CONNECTED_TABLE_POS', CN_LSOPTIME_TABLE_POS + CN_STAT_MAS_SIZE * 4);
+define('CN_STAT_TABLE_POS', CN_CONNECTED_TABLE_POS + CN_STAT_MAS_SIZE *  4 );
+define('CN_ADDR_TABLE_POS', CN_STAT_TABLE_POS + CN_STAT_MAS_SIZE * 50 * 4);
+//--------------------------------------------------------------------------------
+//	Формирует таблицу сетевых подключений для 104 сервера
+//--------------------------------------------------------------------------------
+function getConnectionsTableInfo( $dmpInfo, $key, &$rtiTableInfo ){
+	$port = $key;
+	$numcon = getInt($dmpInfo, CN_NUMCON_POS);
+	$rtiTableInfo .= "<br><div>
+		<table class='table  table-striped'> 
+		<thead > <tr> <th >"._t("Address")."</th> <th>"._t("Еstablish")."</th> <th>"._t("Аctivity")."</th> <th>"._t("frame in")."</th> <th>"._t("frame out")."</th></tr> </thead>
+		<tbody> ";
+
+	for($i=0; $i<CN_STAT_MAS_SIZE; $i++){
+		$CSTIME = getInt($dmpInfo, CN_CSTIME_TABLE_POS + (4 * $i));                 // Время создания соединения
+		$LSOPTIME = getInt($dmpInfo, CN_LSOPTIME_TABLE_POS + (4 * $i));             // Время последней активности
+		$CONNECTED = getInt($dmpInfo, CN_CONNECTED_TABLE_POS + (4 * $i));           // Состосяние соединения (1-connected, 0-disconnected)
+		$FrameIn = getInt($dmpInfo, CN_STAT_TABLE_POS + (4 * (50 * $i + 2)));       // Кол-во переданых фреймов
+		$FrameOut = getInt($dmpInfo, CN_STAT_TABLE_POS + (4 * (50 * $i + 3)));      // Кол-во принятых фреймов
+		$ADDR = getTextString($dmpInfo, CN_ADDR_TABLE_POS + (1 * 64 * $i), 64);     // IP адрес клиента
+		if (1 == $CONNECTED){
+			$rtiTableInfo .= "<tr>
+			  <td>".$ADDR."</td>
+			  <td>".(empty($CSTIME)? '': date('Y-m-d H:i:s',$CSTIME))."</td>
+			  <td>".(empty($LSOPTIME)? '': date('Y-m-d H:i:s',$LSOPTIME))."</td>
+			  <td>".$FrameIn."</td>
+			  <td>".$FrameOut."</td>
+			</tr>";
+		}
+	}
+
+	$rtiTableInfo .= "</tbody> </table> </div>
+	";
+}
+
 ?>
