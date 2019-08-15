@@ -31,6 +31,7 @@ const KP_NAME_SIZE=50; 					// размер названия в таблице �
 const KP_TYPE_POS= 54; 					// где тип (type) в таблице девайсов
 define('KP_PORT_POS', KP_TYPE_POS + 1); // где индекс порта связи с КП (port) в таблице девайсов		const KP_PORT_POS= KP_TYPE_POS + 1; 
 define('KP_NBOARD_POS', KP_PORT_POS+3); // где количество установленных в КП плат (nboards) в таблице девайсов		const KP_NBOARD_POS= KP_PORT_POS+3; 
+const KP_TOUT_POS=363; 					// где таймайт отсутствия связи в таблице девайсов
 const KP_DIAG_POS=469; 					// где параметры диагностики КП в таблице девайсов
 
 const DUMP_FLAG = 1;
@@ -62,7 +63,7 @@ function getInt($arr,$offset)
 function  getRtiTableInfo(&$dmpInfo, $key,&$rtiTableInfo){
 	$protocolTypes = ['s101' => 160,'m101'=> 60,'s104'=>162, 'm104'=> 62, 'mModbus' =>45];
 	$mkaProtocols = [102,3,103,4,104,5,105,6,106,7,107,8,108,9,109,10,110,11,111,12,112,13,113,14,114,15,115,16];
-	$signaltypes = [0=>'AI', 1=>'DO', 2=>'DI', 3=>'AC'];
+	$signaltypes = [0=>'AI', 1=>'DI', 2=>'DO', 3=>'AC'];
 //	logger("key = $key");
 	$offsets = explode('_',$key);
     $protocolName = $offsets[3];
@@ -85,14 +86,19 @@ function  getRtiTableInfo(&$dmpInfo, $key,&$rtiTableInfo){
 		if(($protocolName == 'mka' && in_array($cur_type, $mkaProtocols)) || $protocolTypes[$protocolName] == $cur_type) {$devInd += $idev; break;}
 	}
 
-	$offsetNBoard = $offsetTKP + $devInd*KP_TABLE_REC_SIZE+KP_NBOARD_POS;	// где  лежит кол-во установленных плат (смещение таблицы + id девайса * размер записи девайса + смещение параметра NBOARD) 
+	$offsetNBoard = $offsetTKP + $devInd*KP_TABLE_REC_SIZE + KP_NBOARD_POS;	// где  лежит кол-во установленных плат (смещение таблицы + id девайса * размер записи девайса + смещение параметра NBOARD) 
 	$nboard = $dmpInfo[$offsetNBoard];										// читаем кол-ва плат у девайса
+
+	$offsetTOut = $offsetTKP + $devInd*KP_TABLE_REC_SIZE + KP_TOUT_POS;
+	$toutthreshold = getShort($dmpInfo, $offsetTOut);
+//logger(" KEY = ".$key."   DevId=".$devInd."   offsetTKP = ".$offsetTKP."    tout = ".$toutthreshold."    addr = ".$offsetTOut );	
+
 //	logger("nport = $nport ndev = $ndev ntm = $ntm devInd = $devInd blockInd = $blockInd nboard = $nboard");
 //	logger($protocolName."=".$protocolTypes[$protocolName]." devInd = $devInd blockInd = $blockInd nboard = $nboard");
 	$offsetBNum = $offsetNBoard + 1 + $blockInd;							// где лежит "номер" блока
 	$bnum =  $dmpInfo[$offsetBNum];											// читаем "номер" блока (но пока он нам не нужен)
 
-	$offsetBSNum = $offsetNBoard + 1 + MAXBOARDS+ 2*$blockInd;				// где лежит количество сигналов на данной плате
+	$offsetBSNum = $offsetNBoard + 1 + MAXBOARDS + 2*$blockInd;				// где лежит количество сигналов на данной плате
 	$bsnum =  getShort($dmpInfo,$offsetBSNum);								// читаем количество сигналов на данной плате
 
 	$offsetBType = $offsetNBoard + 1 + 3*MAXBOARDS + $blockInd;
@@ -203,10 +209,10 @@ function  getRtiTableInfo(&$dmpInfo, $key,&$rtiTableInfo){
 	$rtiTableInfo .="<table class='table  table-striped'>
 		<thead >
 	  		<tr>
-			    <th >Address</th>
-			    <th >Value</th>";
+			    <th >"._t("Address")."</th>
+			    <th >"._t("Value")."</th>";
 	if ((0 == $btype) || (3 == $btype)) $rtiTableInfo .="<th >Hex</th>";
-	$rtiTableInfo .="<th >Timestamp</th>
+	$rtiTableInfo .="<th >"._t("Timestamp")."</th>
 		  	</tr>
 		</thead>
 		<tbody>";
@@ -214,7 +220,7 @@ function  getRtiTableInfo(&$dmpInfo, $key,&$rtiTableInfo){
 	//$prefix = "$protocolName:$port:".($devNr).":".($blockInd+1);
 	$prefix = "$protocolName:".($devNr).":".($blockInd+1);
 	$delay= mktime() - $bpactime;
-	$bkgStyle = 'background-color: '.($delay>10 ? 'LightSalmon;' : 'Chartreuse');
+	$bkgStyle = 'background-color: '.($delay>$toutthreshold ? 'LightSalmon;' : 'Chartreuse');
 	for($itm= 0; $itm < $nsignal; $itm++) {
 		$address= "$prefix:".($itm+1);
 		$rtiTableInfo .= "<tr><td style= \"$bkgStyle\">$address</td><td>".$vals[$itm]."</td>";
@@ -256,7 +262,8 @@ function makeRtiView( $dumpfname, &$runTimeInfo ){
     $curPortNr = $sa[$offsetTKP+KP_PORT_POS];						// индекс порта связи с КП (индекс линии)
 	$runTimeInfo = "<div class='row'><div class='col-md-4'><h4>"._t("Device").":</h4></div><div class='col-md-4'><h4>"._t("Device Status").":</h4></div></div>";
 	for($i=0; $i < $KPtSize; $i++) {								// перебираем все девайсы, что описаны в v2m (в дампе)
-		$name = getTextString($sa,$offsetTKP,KP_NAME_SIZE);
+		$name = mb_convert_encoding ( getTextString($sa,$offsetTKP,KP_NAME_SIZE), "UTF-8", "CP1251");
+		//$name =  getTextString($sa,$offsetTKP,KP_NAME_SIZE);
 		if (0 == $sa[$offsetTKP]) $name='&ltnoname&gt';
 		//$portOn = $sa[$offsetTPort+PORTDEF_FLAG_POS]&PORT_ON_FLAG;	// проверяет включен ли порт по флагу PORT_ON (в таблице портов)
 //		logger("offsetTPort = $offsetTPort flag$i =".$sa[$offsetTPort+PORTDEF_FLAG_POS]." Port=".$sa[$offsetTKP+KP_PORT_POS]);

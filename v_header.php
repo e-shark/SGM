@@ -56,6 +56,7 @@ li {font-size:16px;}
     <title> SG Monitor and Configurator</title>
   </head>
   <body>
+
     <script src="Assets/js/jquery.1.11.1.js"></script>
     <script src="Assets/js/bootstrap.min.js"></script>
 <div class="container">
@@ -73,7 +74,7 @@ li {font-size:16px;}
 		<div class="panel-body"> 
       <div class="row">
         <div class="col-md-1">
-          <a  class="badge badge-primary"  href="vmain.php">Home</a>
+          <a  class="badge badge-primary"  href="vmain.php"> <?php echo _t("Home"); ?> </a>
         </div>
         <div class="col-md-8">
           Checks SG state and represents a hierarchical view of SG configuration editor. © 2019 Intep Ltd.

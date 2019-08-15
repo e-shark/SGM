@@ -25,6 +25,7 @@ $rtuNetMask    	= '"'.exec('shellcommands'.DIRECTORY_SEPARATOR.'readip.pl -m').'
 ?>
 
 <!--  Header -->
+<?php require($_SERVER['DOCUMENT_ROOT']. "/lldirs.php"); ?>
 <?php require($_SERVER['DOCUMENT_ROOT']. "/v_header.php");?> 
 <!--  /Header -->
 <div class="container">

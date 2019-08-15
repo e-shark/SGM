@@ -6,8 +6,8 @@ ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
 
 	//phpinfo();
-	require($_SERVER['DOCUMENT_ROOT'] . "/v_header.php");
 	require($_SERVER['DOCUMENT_ROOT'] . "/lldirs.php"); 
+	require($_SERVER['DOCUMENT_ROOT'] . "/v_header.php");
 	require($_SERVER['DOCUMENT_ROOT'] . "/llConfig.php"); 
 	require($_SERVER['DOCUMENT_ROOT'] . "/llRti.php");	 
 
@@ -16,11 +16,11 @@ ini_set('display_startup_errors', 0);
 <div class="row">
 	<div class="col-md-3">
 	<ul id='myUL' class ="nav nav-pills nav-stacked">
-  		 <li id = "HomeId"  role="presentation" formname='HomePanel'><span class="form_avail"><a href="#" > <?=_t('Home')?> </a></span></li>
+
+		<li id = "HomeId"  role="presentation" formname='HomePanel'><span class="form_avail"><a href="#" > <?=_t('Status')?> </a></span></li>
 
 <?php 
 	$jamLConfig= yaml_parse_file($jamLConfigFile);
-	//logger(print_r($jamLConfig,true));
 	$dmpInfo = makeRtiView($rtuDumpFileName, $runTimeInfo );
 	fillSesDevsFlagsMas( $jamLConfig );
 	//echo "<br>--------------<br>".print_r( $_SESSION['DevsParams'] ,true)."<br>-------------------------<br>";

@@ -6,6 +6,7 @@
 <?php include 'libauth.php'; session_start(); if( authorizeFromCookie() ) {	header('Location: vmain.php'); exit(); } ?>
 <?php unset($badusrmessage);	if( !empty( $_SESSION['badusrmessage'] ) ) { $badusrmessage = $_SESSION['badusrmessage']; unset($_SESSION['badusrmessage']); } ?>
 
+<?php require($_SERVER['DOCUMENT_ROOT'] . "/lldirs.php"); ?>
 <?php require($_SERVER['DOCUMENT_ROOT'] . "/v_header.php");?> 
 
 	<form action="clogin.php" method="post">

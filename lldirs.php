@@ -32,7 +32,8 @@ if( is_dir( $lrturtdir ) ) {
 	$ListPort =['/dev/ttyUSB0','/dev/ttyUSB1','/dev/ttyUSB2','/dev/ttyUSB3','/dev/ttyS1','/dev/tty/ttyS2'];
 	$rtuDumpFileName = '/run/shm/v2mmmf';//'/tmp/lrtum.dmp';
 	$rtuLogDir = $lrturtdir;
-	$jamLConfigFile = "/home/vpr/bin/sg.cnf";
+	$jamLConfigFile = "/home/vpr/bin/sgUTF8.cnf";
+	$jamLConfigDnldFile = "/home/vpr/bin/sg.cnf";
 	$mmfDumpFileName = '/run/shm/S104_STATISTIC_MMF_';
 }
 else {	/*---For debugging under Windows*/
@@ -41,6 +42,7 @@ else {	/*---For debugging under Windows*/
 	$rtuDumpFileName= $_SERVER['DOCUMENT_ROOT']."/kkpio.dmp";
 	$rtuLogDir = $_SERVER['DOCUMENT_ROOT'].'/Log';
 	$jamLConfigFile = $_SERVER['DOCUMENT_ROOT']."/sg.cnf";
+	$jamLConfigDnldFile = $_SERVER['DOCUMENT_ROOT']."/sg.cnf";
 	$mmfDumpFileName = $_SERVER['DOCUMENT_ROOT']."/S104_STATISTIC_MMF_";
 }
 
@@ -75,8 +77,11 @@ function _t($key){
 		"Out"=> ["Выход"],
 		"Port"=> ["Порт"],
 		"Mode"=> ["Режим"],
+		"Status"=> ["Статус"],
 		"Timeout"=> ["Таймаут"],
+		"Timestamp"=> ["Метка времени"],
 		"Type"=> ["Тип"],
+		"Value"=> ["Значение"],
 		"Duplex"=> ["Дуплекс"],
 		"Half Duplex"=> ["Полудуплекс"],
 		"Inversion"=> ["Инверсия"],
@@ -86,7 +91,7 @@ function _t($key){
 		"frame in"=> ["приняно"],
 		"frame out"=> ["передано"],
 
-		'Home'=> ["Домой"],
+		'Home'=> ["На главную"],
 		'Configuration'=> ["Конфигурация"],
 		"Change password"=> ["Изменить пароль"],
 		"Upload Firmware"=> ["Обновить ПО"],
@@ -97,6 +102,7 @@ function _t($key){
 		'Logout'=> ["Выйти из системы"],
 		'Administration' => ["Администрирование"],
 		'Monitor'=> ["Монитор"],
+		'Temperature'=> ["Температура"],
 
 		"Protocol" => ["Протокол"],
 		"Protocols" => ["Протоколов"],
@@ -110,18 +116,20 @@ function _t($key){
 		"Master IP"=> ["Мастер IP"],
 		"Connection table"=> ["Таблица подключений"],
 		"Clock Sync"=> ["Синхронизация часов"],
-		"Link Aaddress"=> ["Синхронизация часов"],
 		"Com Mode"=> ["Режим порта"],
 		"Link Test"=> ["Ком. Тест"],
 		"Retries"=> ["Повторы"],
 			
 		"Device" => ["Устройство"],
 		"Devices" => ["Устройств"],
+		"Device Monitor"=> ["Мониторинг устройства"],
 		"Device Settings"=> ["Установки устройства"],
 		"Device Index"=> ["Индекс устройства"],
+		"System number"=> ["Системный номер"],
 		"Device Status"=> ["Статус устройства"],
 		"Logical Address"=> ["Логический адрес"],
 		"Physical Address"=> ["Физический адрес"],
+		"Link Address"=> ["Связной адрес"],
 		"Poll Period"=> ["Период опроса"],
 		"Link Timeout"=> ["Таймаут связи"],
 		"Main Poll"=> ["Общий опрос"],

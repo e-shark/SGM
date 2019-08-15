@@ -2,7 +2,8 @@
 	include 'libauth.php'; session_start(); if( !isAuthorized() ) { header('Location: index.php'); exit(); } 
 ?>
 
-<?php require($_SERVER['DOCUMENT_ROOT'] . "/v_header.php");?> 
+<?php require($_SERVER['DOCUMENT_ROOT']. "/lldirs.php"); ?>
+<?php require($_SERVER['DOCUMENT_ROOT']. "/v_header.php");?> 
 
 <?php
 

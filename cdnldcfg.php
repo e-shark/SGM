@@ -35,6 +35,6 @@ function file_force_download($file) {
   }
 }
 
-file_force_download($jamLConfigFile);
+file_force_download($jamLConfigDnldFile);
 
 ?>

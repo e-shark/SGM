@@ -33,7 +33,7 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 			$BlockInd = $Blocks[$i-1]['Block']; 
 			$nsignals = getRtiTableInfo($dmpInfo,$par,$rtiTableInfo);
 			$form_title = _t("Block Settings");
-			$block_index = _t("Block Index");
+			$block_index = _t("System number");
 			$PanelView .= "<div id='$idName' style='display:none'>
 					<h3>$form_title:</h3>
 					<div class='row'>
@@ -68,16 +68,16 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 		global $saveButtonTxt, $InuseOn, $InuseOff,$ListKaType, $ListKaChannel;
 		$ndev = count($Devs);
 		$DevLabel = _t("Device Settings");	$DevTreeLabel = _t("Device");
-		$DevIndLabel = _t("Device Index"); $InuseLabel = _t("Device Status"); 
+		$DevIndLabel = _t("System number"); $InuseLabel = _t("Device Status"); 
 		$NameLabel = _t("Name"); $CommentLabel = _t("Comment");
-		$LAddressLabel = _t("Logical Address"); $LinkaddressLabel = _t("Physical Address");
+		$LAddressLabel = _t("Logical Address"); $LinkaddressLabel = _t("Link Address");
 		$pollperiodLabel = _t("Poll Period"); $LinkTimeoutLabel = _t("Link Timeout"); $SecText = _t("sec");
 		$Command100Label = _t("Main Poll"); $Command101Label = _t("Meter Poll");
 		$PotocolText = _t("Protocol");  $TypeText = _t("Type");	$ChannelText = _t("Channel");
 		$DuplexText = _t("Duplex"); $HalfDuplexText = _t("Half Duplex"); 
 		$KaChannelmodeLabel = _t("Channel Mode"); $YesText = _t("Yes"); $NoText = _t("No");
 		$KaInversionLabel = _t("Inversion"); $Ad1Text = _t("Ad1"); $Ad2Text = _t("Ad2");
-		$KaChannelSpeedLabel = _t("Baud Rate"); $msek = _t("msec");	
+		$KaChannelSpeedLabel = _t("Baud Rate"); $msek = _t("msec");	$sek = _t("sec");	
 
 		for($i = 1; $i <= $ndev; $i++) {
 			$par=$i."_".$key;
@@ -93,16 +93,16 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 			$PanelView .= "<div id='$idName' style='display:none'>
 				<h3>$DevLabel:</h3>
 				<div class='row'>
-					<div class='col-md-2'> <label> $DevIndLabel: 	</label> </div>
-					<div class='col-md-2'> <div class=' panel-info form-control'> $DevInd </div> </div>
-				</div>
-				<div class='row'>
 					<div class='col-md-2'> <label>	$NameLabel: 	</label> </div>
-					<div class='col-md-3'> <div class=' panel-info form-control'> $Name </div> </div>		
+					<div class='col-md-10'> <div class=' panel-info form-control'> $Name </div> </div>		
 				</div>
 				<div class='row'>
 					<div class='col-md-2'> <label> $CommentLabel: 	</label> </div>
 					<div class='col-md-10'> <div class=' panel-info form-control'> $Comment </div> </div>
+				</div>
+				<div class='row'>
+					<div class='col-md-2'> <label> $DevIndLabel: 	</label> </div>
+					<div class='col-md-2'> <div class=' panel-info form-control'> $DevInd </div> </div>
 				</div>
 				<div class='row'>
 					<div class='col-md-2'> <label> $InuseLabel </label> </div>
@@ -122,10 +122,6 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 					<div class='col-md-2'> <div class=' panel-info form-control'> $Linkaddress </div> </div>
 				</div>
 				";
-				$PanelView .= "<div class='row'>
-					<div class='col-md-2'>	<label>	$LinkaddressLabel: 	</label>		</div>
-					<div class='col-md-2'><div class=' panel-info form-control'> $Linkaddress </div> </div>
-				</div>";
 			}
 			if(null != ($pollperiod =$Devs[$i-1]['Pollperiod'])){
 				$PanelView .= "<div class='row'>
@@ -178,7 +174,7 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 						<div class='col-md-2'>	<label>	$KaChannelmodeLabel:	</label>		</div>
 						<div class='col-md-2'>	<label><input type='checkbox' disabled value ='1' name='KaChannelmode_$par' $checked onchange='toggleCheckBoxLabelText(this,$fEXtraPars)'>&emsp;$KaChannelmodeOnOff</label>	</div>
 				";
-				$KaChannelInversion = $Devs[$i-1]['KaChannelInversion'];
+				$KaChannelInversion = $Devs[$i-1]['KaChannelinversion'];
 				$KaChannelInversionOnOff = $KaChannelInversion == 1 ? $YesText : $NoText; $checked = $KaChannelInversion == 1 ? "checked" : "";
 				$fEXtraPars = "\"$YesText\",\"$NoText\"";
 				$PanelView .= "
@@ -194,7 +190,7 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 				";
 				$t2 = $Devs[$i-1]['t2'];
 				$PanelView .= "
-					<div class='col-md-2'> <label>	t2 ($msek): 	</label>		</div>
+					<div class='col-md-2'> <label> t2 ($sek): </label> </div>
 					<div class='col-md-2'> <div class=' panel-info form-control'> $t2 </div> </div> 	
 				</div>";
 
@@ -225,7 +221,7 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 		$nline = count($lines);
 		$lineTreeLabel = _t("Channel");
 		$lineLabel = _t("Channel Settings");
-		$lineIndLabel = _t("Channel Index"); $InuseLabel = _t("Channel Status"); 
+		$lineIndLabel = _t("System number"); $InuseLabel = _t("Channel Status"); 
 		$PortLabel = _t("Port"); $NameLabel = _t("Name"); $CommentLabel = _t("Comment");
 		$MasterIpLabel = _t("Master IP");
 		$ConnectionTableLabel =  _t("Connection table");
@@ -250,16 +246,16 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 			$PanelView .= "<div id='$idName' style='display:none'>
 							<h3>$lineLabel:</h3>
 					<div class='row'>
-						<div class='col-md-2'> <label>	$lineIndLabel: 	</label>		</div>
-						<div class='col-md-2'> <div class=' panel-info form-control'> $lineInd </div></div>
-					</div>
-					<div class='row'>
 						<div class='col-md-2'> <label>	$NameLabel: 	</label>		</div>
-						<div class='col-md-3'> <div class=' panel-info form-control'> $Name </div> </div>				
+						<div class='col-md-10'> <div class=' panel-info form-control'> $Name </div> </div>				
 					</div>
 					<div class='row'>
 						<div class='col-md-2'> <label>	$CommentLabel: 	</label>		</div>
 						<div class='col-md-10'> <div class=' panel-info form-control'> $Comment </div> </div> 
+					</div>
+					<div class='row'>
+						<div class='col-md-2'> <label>	$lineIndLabel: 	</label>		</div>
+						<div class='col-md-2'> <div class=' panel-info form-control'> $lineInd </div></div>
 					</div>
 					<div class='row'>
 						<div class='col-md-2'> <label>	$InuseLabel:	</label>		</div>
@@ -409,21 +405,17 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 				}
 
 				// Таблица текущих подключений (для 104)
-				//logger("block - ".$key." - ".$protocolName." - ".print_r($offsets,true));
-				//logger("block - ".$key);
-
 				$Port = $lines[$i-1]['Port']; 
 				if(isset($Port)){								//s104
-					$PanelView .= "<br>
+					$PanelView .= "<br><div>
 						<h3>$ConnectionTableLabel :</h3>
 						<div port= '$Port' class = 'Connection_table'>
-						</div>";
+						</div></div>";
 				}
-
 			} //if ("s104" == $key)
 
 			$PanelView .= " $saveButtonTxt 
-				</div> <br><br>
+				</div> 
 				";
 		}
 	}
