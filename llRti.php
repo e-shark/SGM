@@ -56,9 +56,10 @@ function getInt($arr,$offset)
 }                                
 
 //--------------------------------------------------------------------------------------
-// dmpInfo - 
-// key - адрес блока вида 1_1_1_s104
-// rtiTableInfo
+// Формирует таблицу сигналов для блока
+// dmpInfo - массив - дамп kkpio
+// key - адрес блока (вида 1_1_1_s104)
+// rtiTableInfo - сюда формируется отображение таблицы
 //--------------------------------------------------------------------------------------
 function  getRtiTableInfo(&$dmpInfo, $key,&$rtiTableInfo){
 	$protocolTypes = ['s101' => 160,'m101'=> 60,'s104'=>162, 'm104'=> 62, 'mModbus' =>45];
@@ -99,18 +100,17 @@ function  getRtiTableInfo(&$dmpInfo, $key,&$rtiTableInfo){
 	$bnum =  $dmpInfo[$offsetBNum];											// читаем "номер" блока (но пока он нам не нужен)
 
 	$offsetBSNum = $offsetNBoard + 1 + MAXBOARDS + 2*$blockInd;				// где лежит количество сигналов на данной плате
-	$bsnum =  getShort($dmpInfo,$offsetBSNum);								// читаем количество сигналов на данной плате
+	$bsnum =  getShort($dmpInfo, $offsetBSNum);								// читаем количество сигналов на данной плате
 
 	$offsetBType = $offsetNBoard + 1 + 3*MAXBOARDS + $blockInd;
 	$btype = $dmpInfo[$offsetBType];										// читаем тип платы (0-ТИ 1-ТС 2-ТУ 3-ТИИ)
 
  	$offsetBFrom = $offsetNBoard + 1 + 4*MAXBOARDS + 4*$blockInd;
-	$bfrom = getInt($dmpInfo,$offsetBFrom);									// читаем смещения буферов плат относительно начала таблицы ТМ
+	$bfrom = getInt($dmpInfo, $offsetBFrom);									// читаем смещения буферов плат (сигналов) относительно начала таблицы ТМ (т.е. с какого индекса начинаются сигналы для данного блока, в таблице сигналов)
 
 //	logger("offsetBSNum = $offsetBSNum bsnum=$bsnum bfrom = $bfrom btype = $btype");
 	$offsetBPactime = $offsetNBoard + 1 + 8*MAXBOARDS + 4*$blockInd;
-	$bpactime = getInt($dmpInfo,$offsetBPactime);							// читаем время прихода последнего пакета на плату
-
+	$bpactime = getInt($dmpInfo, $offsetBPactime);							// читаем время прихода последнего пакета на плату
 	$vals = array();				// массив сигналов
 	$shift = 0;
 
@@ -128,13 +128,14 @@ function  getRtiTableInfo(&$dmpInfo, $key,&$rtiTableInfo){
 			$nbyte = $bsnum;							// кол-во сигналов на плате
 			$nsignal=$bsnum * 8;
 			$cur_byte = 0;
-			$curTMVal = $dmpInfo[$offsetTM+$bfrom*TM_TABLE_REC_SIZE + 1];
+			$curTMVal = $dmpInfo[$offsetTM + $bfrom * TM_TABLE_REC_SIZE + 1];
 	//		logger("bfrom = $bfrom curTMVal = $curTMVal");
 			$shift = 0;
 			for($itm=0; $itm < $nsignal; $itm++) {
 				if($shift >= 8){
 					$cur_byte++;
-					$curTMVal = $dmpInfo[$offsetTM+$offsetBFrom + 1+ $cur_byte];
+					$curTMVal = $dmpInfo[$offsetTM + $bfrom * TM_TABLE_REC_SIZE + $cur_byte * TM_TABLE_REC_SIZE + 1];
+					//$curTMVal = $dmpInfo[$offsetTM + $offsetBFrom + 1+ $cur_byte];
 					$shift = 0;
 				}
 				$vals[$cur_byte*8+ 7 - $shift] = ($curTMVal & (1 << $shift)) ? 1 : 0; 

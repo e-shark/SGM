@@ -77,7 +77,7 @@ li {font-size:16px;}
           <a  class="badge badge-primary"  href="vmain.php"> <?php echo _t("Home"); ?> </a>
         </div>
         <div class="col-md-8">
-          Checks SG state and represents a hierarchical view of SG configuration editor. © 2019 Intep Ltd.
+          Substation Gateway SG-1 © 2019 Intep Ltd.
         </div>
         <div class="col-md-3">
           ( <?php exec("cat /home/vpr/bin/sg.ver", $out, $retv );  echo $out[0]; unset($retv); unset($out);?> )
@@ -116,7 +116,8 @@ li {font-size:16px;}
   function printTime()
   {
   if (!HaveDiff) getTime();
-  var realtime = +Date.now() + TimeDiff; 
+  var x = "test";
+  var realtime = +Date.now() - TimeDiff; 
   var date = new Date(realtime);
   var hours = checkTime(date.getHours());
   var minutes = checkTime(date.getMinutes());

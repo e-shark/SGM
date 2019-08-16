@@ -48,6 +48,7 @@ if (!empty($RequestFunction)){
 			//$result = 'Error request!';
 	}
 }
+
 if (!empty($result))echo json_encode($result);
 
 ?>

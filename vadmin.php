@@ -34,96 +34,121 @@ $rtuNetMask    	= '"'.exec('shellcommands'.DIRECTORY_SEPARATOR.'readip.pl -m').'
 		<div class="col-md-6">		<h1> Device configuration </h1>		</div>
 	</div>
 
+	<?php // УСТАНОВКА ВРЕМЕНИ ?>
 	<hr align="center" color="Red" />
-	<?php // СМЕНА ПАРОЛЯ ?>
+	<div class="row">
+		<div class="col-md-2"> </div>
+		<div class="col-md-6"> <h3>Time setup:</h3> </div>
+	</div>
+	<form action="adminutils.php" method="post">
+		<input type="hidden" name="function" value="settime">
+		<br>
+		<div class="row">
+			<div class="col-md-2"> Date: </div>
+			<div class="col-md-2"> <input class="form-control" type="date" name="newdate" value="<?php echo date('Y-m-d'); ?>" > </div>
+		</div>
+		<div class="row">
+			<div class="col-md-2"> Time </div>
+			<div class="col-md-2"> <input class="form-control" type="time" name="newtime" value="<?php echo date('H:i'); ?>" > </div>
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-md-2"> </div>
+			<div class="col-md-1"> <a class="btn btn-primary" href="vmain.php"> Cancel </a> </div>
+			<div class="col-md-2"> <input class="btn btn-primary" type="submit" value="Save"> </div>
+		</div>
+		<br>
+	</form>
 
+
+
+	<?php // СМЕНА ПАРОЛЯ ?>
+	<hr align="center" color="Red" />
 	<div class="row">
 		<div class="col-md-2"></div>
-		<div class="col-md-6">		<h3>Admin password settings:</h3> 		</div>
+		<div class="col-md-6"> <h3>Admin password settings:</h3> </div>
 	</div>
 
 	<form action="cadmin.php" method="post">
 		<br>
 		<div class="row">
-			<div class="col-md-2">		Old password:		</div>
-			<div class="col-md-2">		<input class="form-control" type="password"  	name="oldpsw" > 		</div>
+			<div class="col-md-2"> Old password: </div>
+			<div class="col-md-2"> <input class="form-control" type="password" name="oldpsw" > </div>
 		</div>
 		<div class="row">
-			<div class="col-md-2">		New password:		</div>
-			<div class="col-md-2">		<input class="form-control" type="password" name="newpsw" > 	</div>
+			<div class="col-md-2"> New password: </div>
+			<div class="col-md-2"> <input class="form-control" type="password" name="newpsw" > </div>
 		</div>
 		<div class="row">
-			<div class="col-md-2">		</div>
-			<div class="col-md-4"><label><?php echo $chpswmessage ?></label></div>
+			<div class="col-md-2"> </div>
+			<div class="col-md-4"> <label> <?php echo $chpswmessage ?> </label> </div>
 		</div>
 		<br>
 		<div class="row">
 
-			<div class="col-md-2"></div>
-			<div class="col-md-1"><a     class="btn btn-primary" href="vmain.php">       Cancel     </a></div>
-			<div class="col-md-2"><input class="btn btn-primary" type="submit" value="       Save       "></div>
+			<div class="col-md-2"> </div>
+			<div class="col-md-1"> <a class="btn btn-primary" href="vmain.php"> Cancel </a> </div>
+			<div class="col-md-2"> <input class="btn btn-primary" type="submit" value="Save"> </div>
 		</div>
 		<br>
 	</form>
 
-	<hr align="center" color="Red" />
 	<?php // ОБНОВЛЕНИЕ ПРОШИВКИ ?>
-
+	<hr align="center" color="Red" />
 	<div class="row">
 		<div class="col-md-2"></div>
-		<div class="col-md-6">		<h3>Upload Firmware:</h3> 		</div>
+		<div class="col-md-6"> <h3> Upload Firmware: </h3> </div>
 	</div>
 
 	<form action="cupload.php" method="post" enctype="multipart/form-data">
 		<br>
        	<div class="row">
-			<div class="col-md-2">		Firmware file to upload:		</div>
-			<div class="col-md-8">		<input type="file" name="fileToUpload" id="fileToUpload" class="btn btn-default btn-file" accept=".fw">	</div>
+			<div class="col-md-2"> Firmware file to upload: div>
+			<div class="col-md-8"> <input type="file" name="fileToUpload" id="fileToUpload" class="btn btn-default btn-file" accept=".fw">	</div>
 		</div>
 		<div class="row">
-			<div class="col-md-2">		</div>
-			<div class="col-md-4"><label><?php echo $uploadmessage ?></label></div>
+			<div class="col-md-2"> </div>
+			<div class="col-md-4"> <label> <?php echo $uploadmessage ?> </label> </div>
 		</div>
 		<br>
        	<div class="row">
        		<div class="col-md-2"> </div>
-			<div class="col-md-1"><a     class="btn btn-primary" href="vmain.php">       Cancel     </a></div>
-			<div class="col-md-2">		<input type="submit" value="Upload" name="submit" class="btn btn-primary"></div>
+			<div class="col-md-1"> <a class="btn btn-primary" href="vmain.php"> Cancel </a> </div>
+			<div class="col-md-2"> <input type="submit" value="Upload" name="submit" class="btn btn-primary"></div>
 		</div>
 		<br>
 	</form>
 
-	<hr align="center" color="Red" />
 	<?php // СМЕНА IP АДРЕСА ?>
-
+	<hr align="center" color="Red" />
 	<div class="row">
-		<div class="col-md-2"></div>
-		<div class="col-md-6">		<h3>Change IP addres:</h3> 		</div>
+		<div class="col-md-2"> </div>
+		<div class="col-md-6"> <h3> Change IP addres: </h3> </div>
 	</div>
 
 	<form action="cchngip.php" method="post" enctype="multipart/form-data">
 		<br>
 
 			<div class="row">
-				<div class="col-md-2">		RTU IP address: 			</div>
-				<div class="col-md-4">		<input class="form-control" type="text" value = <?php echo $rtuIpAddr; ?> name="rtuIpAddr" > 		</div>
+				<div class="col-md-2"> RTU IP address: </div>
+				<div class="col-md-4"> <input class="form-control" type="text" value = <?php echo $rtuIpAddr; ?> name="rtuIpAddr" > </div>
 			</div>
 
 			<div class="row">
-				<div class="col-md-2">		Default gateway: 			</div>
-				<div class="col-md-4">		<input class="form-control" type="text" value = <?php echo $rtuGateway; ?> name="rtuGateway" > 		</div>
+				<div class="col-md-2"> Default gateway: </div>
+				<div class="col-md-4"> <input class="form-control" type="text" value = <?php echo $rtuGateway; ?> name="rtuGateway" > </div>
 			</div>
 
 			<div class="row">
-				<div class="col-md-2">		Network mask: 			</div>
-				<div class="col-md-4">		<input class="form-control" type="text" value = <?php echo $rtuNetMask; ?> name="rtuNetMask" > 		</div>
+				<div class="col-md-2"> Network mask: </div>
+				<div class="col-md-4"> <input class="form-control" type="text" value = <?php echo $rtuNetMask; ?> name="rtuNetMask" > </div>
 			</div>
 
 			<br>
 			<div class="row">
-				<div class="col-md-2">	</div>
-				<div class="col-md-1">		<a class="btn btn-primary" href="vmain.php">       Cancel     </a></div>
-				<div class="col-md-2">		<input type="submit" value="Change" name="submit" class="btn btn-primary"></div>
+				<div class="col-md-2"> </div>
+				<div class="col-md-1"> <a class="btn btn-primary" href="vmain.php"> Cancel </a> </div>
+				<div class="col-md-2"> <input type="submit" value="Change" name="submit" class="btn btn-primary"> </div>
 			</div>
 
 		<br>
