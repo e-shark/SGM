@@ -123,7 +123,7 @@ li {font-size:16px;}
   var minutes = checkTime(date.getMinutes());
   var seconds = checkTime(date.getSeconds());
   var year = date.getFullYear();
-  var month = checkTime(date.getMonth());
+  var month = checkTime(date.getMonth()+1);
   var day = date.getDate();
   var formattedTime = "&nbsp;" + hours + ':' + minutes + ':' + seconds;      
   var formattedDate = day + '.' + month + '.' + year;     
