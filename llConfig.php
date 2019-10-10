@@ -319,7 +319,7 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 		if(null != ($comdevmode =$lines[$i-1]['comdevmode'])){//s101 modbus
 		    $PanelView .= "
 			<div class='col-md-1'>	<label>	$ComDevModeText: </label>		</div>
-			<div class='col-md-4'>	<div class=' panel-info form-control'> $comdevmode </div></div>";
+			<div class='col-md-5'>	<div class=' panel-info form-control'> $comdevmode </div></div>";
 		}
 		$PanelView .= "</div>
 		    ";
@@ -340,7 +340,7 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 	    }
 
 	    if(isset($lines[$i-1]['t1'])){
-		$PanelView .= "	<br><div class='row'> 
+			$PanelView .= "	<br><div class='row'> 
 			<div class='col-md-1'> <label> t1,($SecText.): </label> </div>
 			<div class='col-md-2'> <div class=' panel-info form-control'> ".$lines[$i-1]['t1']." </div> </div>
 
@@ -363,31 +363,31 @@ $InuseOn = _t("On"); $InuseOff = _t("Off");
 	    }
 
 	    if(null != ($IOAL =$lines[$i-1]['IOAL'])) {		 					
-		$PanelView .= "
-		    <div class='row'>
-			<div class='col-md-1'>	<label>	IOAL: </label>		</div>
-			<div class='col-md-2'> <div class=' panel-info form-control'>". $IOAL." </div></div>
-		    ";
+			$PanelView .= "
+			    <div class='row'>
+				<div class='col-md-1'>	<label>	IOAL: </label>		</div>
+				<div class='col-md-2'> <div class=' panel-info form-control'>". $IOAL." </div></div>
+			    ";
 
-		if(null != ($ASDUAL =$lines[$i-1]['ASDUAL'])) {		 					
-		    $PanelView .= "
-			<div class='col-md-1'> <label> ASDUAL: </label> </div>
-			<div class='col-md-2'> <div class=' panel-info form-control'> ".$ASDUAL." </div> </div>";
-		}	
-		if(!isset($lines[$i-1]['LAL'])) $PanelView .= " </div>
-		    ";
+			if(null != ($ASDUAL =$lines[$i-1]['ASDUAL'])) {		 					
+			    $PanelView .= "
+				<div class='col-md-1'> <label> ASDUAL: </label> </div>
+				<div class='col-md-2'> <div class=' panel-info form-control'> ".$ASDUAL." </div> </div>";
+			}	
+			if(!isset($lines[$i-1]['LAL'])) $PanelView .= " </div>  ";
 	    }
 	    
-	    if(null != ($LAL =$lines[$i-1]['LAL'])) {//s101
-		$PanelView .= "
-		    <div class='col-md-1'>	<label>	LAL: </label>		</div>
-		    <div class='col-md-2'> <div class=' panel-info form-control'> ".$LAL." </div> </div>";
-		$COTL =$lines[$i-1]['COTL'];	
-		$PanelView .= "
-		    <div class='col-md-1'>	<label>	COTL: </label>		</div>
-		    <div class='col-md-2'> <div class=' panel-info form-control'> ".$COTL." </div> </div>";
-		$PanelView .= " </div> 
-		    ";
+	    if(isset($lines[$i-1]['LAL'])) {//s101
+	    	$LAL =$lines[$i-1]['LAL'];
+			$PanelView .= "
+			    <div class='col-md-1'>	<label>	LAL: </label>		</div>
+			    <div class='col-md-2'> <div class=' panel-info form-control'> ".$LAL." </div> </div>";
+			$COTL =$lines[$i-1]['COTL'];	
+			$PanelView .= "
+			    <div class='col-md-1'>	<label>	COTL: </label>		</div>
+			    <div class='col-md-2'> <div class=' panel-info form-control'> ".$COTL." </div> </div>";
+			$PanelView .= " </div> 
+			    ";
 	    }
 
 	    if ("s104" == $key){

@@ -25,7 +25,7 @@ ini_set('display_startup_errors', 0);
 	fillSesDevsFlagsMas( $jamLConfig );
 	//echo "<br>--------------<br>".print_r( $_SESSION['DevsParams'] ,true)."<br>-------------------------<br>";
 	makeConfigTreeItems( $jamLConfig, $dmpInfo, $TreeView, $PanelView);
-
+	//logger("jamLConfig\n".print_r($jamLConfig,true));
 	echo $TreeView;
 	$LablelTextOn = "'"._t("On")."'"; $LablelTextOff = "'"._t("Off")."'";
 ?>
